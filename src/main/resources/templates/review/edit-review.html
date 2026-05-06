@@ -1,10 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Edit Review - TutorSync</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        .panel { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 40px; }
+        .input-field { width: 100%; padding: 12px 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 13px; outline: none; transition: border-color 0.2s; }
+        .input-field:focus { border-color: #2563eb; }
+        .textarea-field { width: 100%; padding: 12px 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 13px; font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.2s; min-height: 120px; resize: vertical; }
+        .textarea-field:focus { border-color: #2563eb; }
+        .btn-primary { background: #2563eb; color: white; padding: 12px; border-radius: 4px; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer; }
+        .btn-secondary { background: #e2e8f0; color: #64748b; padding: 12px; border-radius: 4px; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer; }
+        .star-rating { display: flex; gap: 8px; margin: 16px 0; }
+        .star { font-size: 32px; cursor: pointer; color: #d1d5db; transition: color 0.2s; }
+        .star.active { color: #f59e0b; }
+        .star:hover { color: #f59e0b; }
+    </style>
 </head>
-<body>
+<body class="bg-[#f8fafc]">
+<!-- Navigation Header -->
+<header class="bg-white border-b border-gray-200 py-4 px-10 sticky top-0 z-50">
+    <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">S</div>
+            <a th:href="@{/dashboard}" class="font-bold text-lg text-blue-600 hover:opacity-80">TutorSync</a>
+        </div>
+        <div class="flex gap-6 items-center">
+            <a th:href="@{/reviews/my-reviews}" class="text-[13px] font-bold text-gray-600 uppercase hover:text-blue-600">My Reviews</a>
+            <a th:href="@{/reviews/my-reviews}" class="text-[13px] font-bold text-blue-600 uppercase hover:opacity-80">← Back to Reviews</a>
+        </div>
+    </div>
+</header>
 
+<div class="flex items-center justify-center min-h-[calc(100vh-80px)] py-6">
+    <div class="max-w-md w-full px-6">
+        <div class="panel shadow-sm">
+            <h2 class="text-xl font-bold uppercase tracking-widest text-center mb-2">Edit Your Review</h2>
+            <p class="text-center text-gray-400 text-[11px] uppercase tracking-widest mb-10" th:text="'For: ' + ${tutor.name}"></p>
+
+            <form th:action="@{'/reviews/update/' + ${review.id}}" method="POST" class="space-y-6">
+                <div>
+                    <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest block mb-2">Your Rating</label>
+                    <div class="star-rating">
+                        <span class="star" onclick="setRating(1)">★</span>
+                        <span class="star" onclick="setRating(2)">★</span>
+                        <span class="star" onclick="setRating(3)">★</span>
+                        <span class="star" onclick="setRating(4)">★</span>
+                        <span class="star" onclick="setRating(5)">★</span>
+                    </div>
+                    <input type="hidden" id="ratingInput" name="rating" th:value="${review.rating}" required>
+                </div>
+
+                <div>
+                    <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest block mb-2">Your Feedback</label>
+                    <textarea name="comment" class="textarea-field" placeholder="Share your experience..." required th:text="${review.comment}"></textarea>
+                </div>
+
+                <div class="flex gap-3">
+                    <button type="submit" class="flex-1 btn-primary">Update Review</button>
+                    <a th:href="@{/reviews/my-reviews}" class="flex-1 btn-secondary text-center">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function setRating(stars) {
+            document.getElementById('ratingInput').value = stars;
+            document.querySelectorAll('.star').forEach((star, index) => {
+                star.classList.toggle('active', index < stars);
+            });
+        }
+
+        // Initialize stars on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const currentRating = parseInt(document.getElementById('ratingInput').value);
+            document.querySelectorAll('.star').forEach((star, index) => {
+                star.classList.toggle('active', index < currentRating);
+            });
+        });
+    </script>
 </body>
 </html>

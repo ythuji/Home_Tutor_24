@@ -1,10 +1,84 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Tutor Registry - TutorSync</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        .panel { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; }
+        .panel-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #64748b; margin-bottom: 24px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .panel-title::after { content: ''; flex: 1; height: 1px; background: #e2e8f0; }
+        .tutor-card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; transition: all 0.2s; }
+        .tutor-card:hover { border-color: #2563eb; transform: translateY(-2px); }
+        .badge { background: #f1f5f9; color: #2563eb; padding: 4px 8px; border-radius: 4px; font-size: 10px; font-bold: 600; text-transform: uppercase; }
+        .btn-sm { padding: 6px 12px; font-size: 10px; font-weight: 700; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+    </style>
 </head>
-<body>
+<body class="bg-[#f8fafc]">
+<header class="h-20 bg-white border-b border-gray-200 flex items-center justify-between px-10 mb-12">
+    <div class="flex items-center gap-3">
+        <div class="w-8 h-8 bg-blue-600 rounded-[4px]"></div>
+        <span class="font-bold text-xl tracking-tight">TutorSync Registry</span>
+    </div>
+    <div class="flex items-center gap-6">
+        <a th:href="@{/dashboard}" class="text-[13px] font-medium text-gray-500 hover:text-blue-600">DASHBOARD</a>
+        <a th:if="${session.loggedUser != null && session.loggedUser.role == 'TUTOR'}"
+           th:href="@{/tutors/add}" class="px-4 py-2 bg-blue-600 text-white text-[11px] font-bold rounded-[4px] uppercase tracking-widest">Register New Node</a>
+        <a th:href="@{/logout}" class="text-[13px] font-bold text-red-500 uppercase">LOGOUT</a>
+    </div>
+</header>
 
+<main class="max-w-6xl mx-auto px-6">
+    <div class="panel shadow-sm mb-12">
+        <h2 class="panel-title">Active Tutor Nodes</h2>
+
+        <div th:if="${tutors.empty}" class="py-20 text-center border-2 border-dashed border-gray-100 rounded-xl">
+            <p class="text-gray-400 font-bold uppercase tracking-widest text-[11px]">No active tutors found in registry.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div th:each="tutor : ${tutors}" class="tutor-card shadow-sm">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-[4px] flex items-center justify-center font-bold text-lg" th:text="${tutor.name[0]}"></div>
+                    <span class="badge" th:text="${tutor.specialization}">DOMAIN</span>
+                </div>
+
+                <h3 class="font-bold text-gray-900 mb-1" th:text="${tutor.name}">TUTOR NAME</h3>
+                <p class="text-[12px] text-gray-400 mb-2" th:text="${tutor.email}">EMAIL</p>
+
+                <!-- Review Rating Display -->
+                <a th:href="@{'/reviews/tutor/' + ${tutor.id}}" class="inline-block mb-4">
+                    <div class="flex items-center gap-2">
+                        <div class="flex gap-0.5">
+                                <span th:each="i : ${#numbers.sequence(1, 5)}"
+                                      th:class="${i <= tutorRatings[tutor.id] ? 'text-yellow-400' : 'text-gray-200'}"
+                                      style="font-size: 12px;">★</span>
+                        </div>
+                        <span class="text-[10px] text-gray-400 font-bold" th:text="${tutorReviewCounts[tutor.id]} + ' reviews'">0 reviews</span>
+                    </div>
+                </a>
+
+                <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                    <div>
+                        <span class="text-lg font-bold text-blue-600" th:text="'$' + ${tutor.hourlyRate}">$0.00</span>
+                        <span class="text-[10px] text-gray-400 font-bold uppercase">/HR</span>
+                    </div>
+                    <div class="flex gap-2">
+                        <!-- TUTOR: Only show Modify/Delete for own profile -->
+                        <div th:if="${session.loggedUser != null && session.loggedUser.role == 'TUTOR' && session.loggedUser.id == tutor.id}">
+                            <a th:href="@{'/tutors/edit/' + ${tutor.id}}" class="btn-sm bg-yellow-500 text-white hover:bg-yellow-600">Modify</a>
+                            <a th:href="@{'/tutors/delete/' + ${tutor.id}}" class="btn-sm bg-red-500 text-white hover:bg-red-600" onclick="return confirm('Delete your profile?')">Delete</a>
+                        </div>
+                        <!-- STUDENT: Show Book Node button -->
+                        <a th:if="${session.loggedUser != null && session.loggedUser.role == 'STUDENT'}"
+                           th:href="@{'/bookings/create?tutorId=' + ${tutor.id}}"
+                           class="btn-sm bg-blue-600 text-white hover:opacity-90">Book Node</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
 </body>
 </html>

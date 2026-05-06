@@ -1,10 +1,71 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Schedule Logic Unit - TutorSync</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        .panel { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 40px; }
+        .input-field { width: 100%; padding: 12px 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 13px; outline: none; transition: border-color 0.2s; height: 44px; box-sizing: border-box; }
+        .input-field:focus { border-color: #2563eb; }
+        .btn-primary { background: #2563eb; color: white; padding: 12px; border-radius: 4px; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; }
+    </style>
 </head>
-<body>
+<body class="bg-[#f8fafc]">
+<!-- Navigation Header -->
+<header class="bg-white border-b border-gray-200 py-4 px-10 sticky top-0 z-50">
+    <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">S</div>
+            <a th:href="@{/dashboard}" class="font-bold text-lg text-blue-600 hover:opacity-80">TutorSync</a>
+        </div>
+        <div class="flex gap-6 items-center">
+            <a th:href="@{/bookings/list}" class="text-[13px] font-bold text-gray-600 uppercase hover:text-blue-600">My Bookings</a>
+            <a th:href="@{/dashboard}" class="text-[13px] font-bold text-blue-600 uppercase hover:opacity-80">← Back to Dashboard</a>
+        </div>
+    </div>
+</header>
 
+<div class="flex items-center justify-center py-6">
+    <div class="max-w-md w-full px-6">
+        <div class="panel shadow-sm">
+            <h2 class="text-xl font-bold uppercase tracking-widest text-center mb-10">Schedule Logic Unit</h2>
+
+            <form th:action="@{/bookings/save}" method="POST" class="space-y-6">
+                <div class="space-y-1">
+                    <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Select Expert Node</label>
+                    <select name="tutorId" required class="input-field">
+                        <option value="">SELECT TUTOR...</option>
+                        <option th:each="tutor : ${tutors}" th:value="${tutor.id}"
+                                th:text="${tutor.name} + ' (' + ${tutor.specialization} + ')'"
+                                th:selected="${selectedTutorId != null && selectedTutorId == tutor.id}"></option>
+                    </select>
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Domain Focus</label>
+                    <input type="text" name="subject" placeholder="SUBJECT DOMAIN" required class="input-field">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-1">
+                        <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Date</label>
+                        <input type="date" name="date" required class="input-field font-semibold">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Start Time</label>
+                        <input type="time" name="time" required class="input-field font-semibold">
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full btn-primary">Commit Scheduling</button>
+            </form>
+
+            <div class="mt-8 text-center border-t border-gray-100 pt-6">
+                <a th:href="@{/bookings/list}" class="text-[11px] font-bold text-gray-400 uppercase tracking-widest hover:text-blue-600">Abort & Return</a>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
