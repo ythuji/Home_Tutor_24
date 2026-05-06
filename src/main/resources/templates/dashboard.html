@@ -1,10 +1,204 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Dashboard - TutorSync</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        .panel { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; position: relative; overflow: hidden; }
+        .panel-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #64748b; margin-bottom: 24px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .panel-title::after { content: ''; flex: 1; height: 1px; background: #e2e8f0; }
+        .stat-card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; text-align: left; }
+        .nav-sidebar { width: 280px; background: white; border-right: 1px solid #e2e8f0; height: calc(100vh - 80px); padding: 32px; flex-shrink: 0; }
+        .sidebar-link { display: flex; align-items: center; gap: 12px; padding: 12px 0; font-size: 13px; font-weight: 500; color: #64748b; transition: all 0.2s; border-bottom: 1px solid transparent; }
+        .sidebar-link:hover { color: #2563eb; transform: translateX(4px); }
+        .btn-action { background: #2563eb; color: white; padding: 10px 20px; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+    </style>
 </head>
-<body>
+<body class="bg-[#f8fafc]">
+<!-- Header -->
+<header class="h-20 bg-white border-b border-gray-200 flex items-center justify-between px-10 sticky top-0 z-50">
+    <div class="flex items-center gap-3">
+        <div class="w-8 h-8 bg-blue-600 rounded-[4px]"></div>
+        <span class="font-bold text-xl tracking-tight">TutorSync Ops</span>
+    </div>
+    <div class="flex items-center gap-6">
+        <div class="bg-gray-50 border border-gray-200 px-4 py-2 rounded-md text-[11px] font-bold uppercase tracking-widest text-gray-500">
+            Session: <span class="text-green-500">ACTIVE</span>
+        </div>
+        <a th:href="@{/logout}" class="text-[13px] font-bold text-red-500 uppercase hover:underline">LOGOUT</a>
+    </div>
+</header>
 
+<div class="flex">
+    <!-- Sidebar -->
+    <aside class="nav-sidebar">
+        <h3 class="text-[10px] uppercase font-bold text-gray-400 tracking-[0.2em] mb-6">System Navigation</h3>
+        <nav class="space-y-1">
+            <a th:href="@{/dashboard}" class="sidebar-link text-blue-600 font-bold border-b-blue-600">
+                <span class="w-1.5 h-1.5 bg-blue-600 rounded-full"></span>
+                Command Center
+            </a>
+            <a th:href="@{/users/profile}" class="sidebar-link">Identity Config</a>
+            <a th:href="@{/tutors/list}" class="sidebar-link">Tutor Registry</a>
+            <a th:href="@{/bookings/list}" class="sidebar-link">Transaction Map</a>
+            <a th:href="@{/payments/history}" class="sidebar-link">Financial Ledger</a>
+            <a th:if="${user.role == 'STUDENT'}" th:href="@{/reviews/my-reviews}" class="sidebar-link">My Reviews</a>
+            <a th:if="${user.role == 'TUTOR'}" th:href="@{/reviews/list}" class="sidebar-link">Quality Audit</a>
+        </nav>
+
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-10">
+        <div class="flex justify-between items-start mb-12">
+            <div>
+                <h1 class="text-3xl font-bold tracking-tight text-gray-900 mb-2 uppercase">
+                    <span th:if="${user.role == 'STUDENT'}">Student Dashboard</span>
+                    <span th:unless="${user.role == 'STUDENT'}">Tutor Dashboard</span>
+                </h1>
+                <p class="text-[13px] text-gray-400 font-medium">
+                    Welcome back, <span class="text-gray-900 font-bold" th:text="${user.name}">NODE_NAME</span>.
+                    Authenticated as <span class="bg-blue-100 text-blue-600 px-2 py-0.5 rounded text-[10px] font-bold" th:text="${user.role}">ROLE</span>
+                </p>
+            </div>
+            <div class="flex gap-3">
+                <!-- STUDENT Only: Initialize Booking Button -->
+                <a th:if="${user.role == 'STUDENT'}" th:href="@{/bookings/create}" class="btn-action shadow-lg shadow-blue-200">Initialize Booking</a>
+
+                <!-- TUTOR Only: Quick Action Buttons -->
+                <a th:if="${user.role == 'TUTOR'}" th:href="@{/users/profile}" class="btn-action shadow-lg shadow-blue-200">View My Profile</a>
+            </div>
+        </div>
+
+        <!-- STUDENT QUICK ACTIONS -->
+        <div th:if="${user.role == 'STUDENT'}" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12">
+            <a th:href="@{/tutors/list}" class="panel shadow-sm hover:shadow-md transition-shadow p-6 text-center">
+                <div class="text-3xl mb-3">🎓</div>
+                <h3 class="text-sm font-bold text-gray-900 uppercase">Browse Tutors</h3>
+                <p class="text-[10px] text-gray-400 mt-1">Find qualified tutors</p>
+            </a>
+            <a th:href="@{/bookings/list}" class="panel shadow-sm hover:shadow-md transition-shadow p-6 text-center">
+                <div class="text-3xl mb-3">📅</div>
+                <h3 class="text-sm font-bold text-gray-900 uppercase">My Bookings</h3>
+                <p class="text-[10px] text-gray-400 mt-1">View your sessions</p>
+            </a>
+            <a th:href="@{/payments/history}" class="panel shadow-sm hover:shadow-md transition-shadow p-6 text-center">
+                <div class="text-3xl mb-3">💰</div>
+                <h3 class="text-sm font-bold text-gray-900 uppercase">My Payments</h3>
+                <p class="text-[10px] text-gray-400 mt-1">Payment history</p>
+            </a>
+            <a th:href="@{/reviews/my-reviews}" class="panel shadow-sm hover:shadow-md transition-shadow p-6 text-center">
+                <div class="text-3xl mb-3">⭐</div>
+                <h3 class="text-sm font-bold text-gray-900 uppercase">My Reviews</h3>
+                <p class="text-[10px] text-gray-400 mt-1">Your feedback</p>
+            </a>
+        </div>
+
+        <!-- TUTOR QUICK ACTIONS -->
+        <div th:unless="${user.role == 'STUDENT'}" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12">
+            <a th:href="@{/bookings/list}" class="panel shadow-sm hover:shadow-md transition-shadow p-6 text-center">
+                <div class="text-3xl mb-3">📅</div>
+                <h3 class="text-sm font-bold text-gray-900 uppercase">My Bookings</h3>
+                <p class="text-[10px] text-gray-400 mt-1">Assigned bookings</p>
+            </a>
+            <div class="panel shadow-sm p-6 text-center">
+                <div class="text-3xl mb-3">✅</div>
+                <h3 class="text-sm font-bold text-gray-900 uppercase">Confirm Booking</h3>
+                <p class="text-[10px] text-gray-400 mt-1">Accept pending</p>
+            </div>
+            <div class="panel shadow-sm p-6 text-center">
+                <div class="text-3xl mb-3">🏁</div>
+                <h3 class="text-sm font-bold text-gray-900 uppercase">Mark Completed</h3>
+                <p class="text-[10px] text-gray-400 mt-1">Finish sessions</p>
+            </div>
+            <a th:href="@{/reviews/list}" class="panel shadow-sm hover:shadow-md transition-shadow p-6 text-center">
+                <div class="text-3xl mb-3">⭐</div>
+                <h3 class="text-sm font-bold text-gray-900 uppercase">View Reviews</h3>
+                <p class="text-[10px] text-gray-400 mt-1">Your feedback</p>
+            </a>
+        </div>
+
+        <!-- Stats Grid - STUDENT VIEW -->
+        <div th:if="${user.role == 'STUDENT'}" class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            <div class="panel shadow-sm">
+                <h2 class="panel-title">My Sessions</h2>
+                <p class="text-4xl font-bold text-gray-900" th:text="${bookings.size()}">0</p>
+                <p class="text-[11px] text-gray-400 font-bold uppercase mt-2">Total Bookings</p>
+            </div>
+            <div class="panel shadow-sm">
+                <h2 class="panel-title">Available Tutors</h2>
+                <p class="text-4xl font-bold text-gray-900" th:text="${tutorCount}">0</p>
+                <p class="text-[11px] text-gray-400 font-bold uppercase mt-2">In Network</p>
+            </div>
+            <div class="panel shadow-sm bg-green-600 text-white border-green-600">
+                <h2 class="panel-title text-green-100 after:bg-green-400">Ready to Learn</h2>
+                <p class="text-4xl font-bold">Start Now</p>
+                <p class="text-[11px] text-green-100 font-bold uppercase mt-2">Book your first session</p>
+            </div>
+        </div>
+
+        <!-- Stats Grid - TUTOR VIEW -->
+        <div th:unless="${user.role == 'STUDENT'}" class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            <div class="panel shadow-sm">
+                <h2 class="panel-title">My Bookings</h2>
+                <p class="text-4xl font-bold text-gray-900" th:text="${bookings.size()}">0</p>
+                <p class="text-[11px] text-gray-400 font-bold uppercase mt-2">Assigned Sessions</p>
+            </div>
+            <div class="panel shadow-sm">
+                <h2 class="panel-title">Network Size</h2>
+                <p class="text-4xl font-bold text-gray-900" th:text="${tutorCount}">0</p>
+                <p class="text-[11px] text-gray-400 font-bold uppercase mt-2">Other Tutors</p>
+            </div>
+            <div class="panel shadow-sm bg-purple-600 text-white border-purple-600">
+                <h2 class="panel-title text-purple-100 after:bg-purple-400">Your Rating</h2>
+                <p class="text-4xl font-bold">⭐ 4.8</p>
+                <p class="text-[11px] text-purple-100 font-bold uppercase mt-2">Based on reviews</p>
+            </div>
+        </div>
+
+        <!-- Recent Activity Panel -->
+        <div class="panel shadow-sm">
+            <h2 class="panel-title">
+                <span th:if="${user.role == 'STUDENT'}">My Recent Sessions</span>
+                <span th:unless="${user.role == 'STUDENT'}">My Assigned Sessions</span>
+            </h2>
+
+            <div th:if="${bookings.empty}" class="py-12 text-center text-gray-400 font-bold uppercase tracking-widest text-[10px]">
+                <span th:if="${user.role == 'STUDENT'}">No bookings yet. Start by browsing tutors!</span>
+                <span th:unless="${user.role == 'STUDENT'}">No bookings assigned. Check back soon!</span>
+            </div>
+
+            <div class="space-y-4">
+                <div th:each="booking : ${bookings}" class="flex items-center justify-between p-4 bg-gray-50 border border-gray-100 rounded-md hover:bg-gray-100 transition">
+                    <div class="flex items-center gap-4">
+                        <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+                        <div>
+                            <h4 class="text-[13px] font-bold text-gray-900" th:text="${booking.subject}">DOMAIN</h4>
+                            <p class="text-[11px] text-gray-400" th:text="${booking.dateTime}">TIME</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-blue-600" th:text="${booking.status}">STATUS</span>
+                        <!-- STUDENT: Show delete/view actions -->
+                        <div th:if="${user.role == 'STUDENT'}" class="flex gap-2">
+                            <a th:href="@{'#'}" class="text-[10px] font-bold text-gray-400 hover:text-gray-600">EDIT</a>
+                        </div>
+                        <!-- TUTOR: Show approve/complete actions -->
+                        <div th:unless="${user.role == 'STUDENT'}" class="flex gap-2">
+                            <a th:href="@{'#'}" class="text-[10px] font-bold text-green-600 hover:text-green-800" th:if="${booking.status == 'PENDING'}">APPROVE</a>
+                            <a th:href="@{'#'}" class="text-[10px] font-bold text-purple-600 hover:text-purple-800" th:if="${booking.status == 'CONFIRMED'}">COMPLETE</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-gray-100 text-center">
+                <a th:href="@{/bookings/list}" class="text-[11px] font-bold text-blue-600 uppercase tracking-widest hover:underline">View Complete Registry →</a>
+            </div>
+        </div>
+    </main>
+</div>
 </body>
 </html>
