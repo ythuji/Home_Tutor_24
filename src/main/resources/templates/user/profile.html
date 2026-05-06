@@ -1,10 +1,91 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Profile - TutorSync</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        .panel { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 32px; }
+        .input-field { width: 100%; padding: 10px 14px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 13px; outline: none; }
+        .panel-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #64748b; margin-bottom: 24px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .panel-title::after { content: ''; flex: 1; height: 1px; background: #e2e8f0; }
+        .btn-primary { background: #2563eb; color: white; padding: 10px 20px; border-radius: 4px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; }
+    </style>
 </head>
-<body>
+<body class="bg-[#f8fafc]">
+<!-- Simple Header -->
+<header class="h-20 bg-white border-b border-gray-200 flex items-center justify-between px-10 mb-12">
+    <div class="flex items-center gap-3">
+        <div class="w-8 h-8 bg-blue-600 rounded-[4px]"></div>
+        <span class="font-bold text-xl tracking-tight">TutorSync</span>
+    </div>
+    <div class="flex items-center gap-6">
+        <a th:href="@{/dashboard}" class="text-[13px] font-medium text-gray-500 hover:text-blue-600 transition-colors">DASHBOARD</a>
+        <a th:href="@{/logout}" class="text-[13px] font-bold text-red-500 uppercase">LOGOUT</a>
+    </div>
+</header>
 
+<main class="max-w-4xl mx-auto px-6">
+    <div class="panel shadow-sm">
+        <h2 class="panel-title">Identity Configuration</h2>
+
+        <form th:action="@{/users/update}" method="POST" class="space-y-8">
+            <div class="grid grid-cols-2 gap-8">
+                <div class="space-y-2">
+                    <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Master Identity</label>
+                    <input type="text" name="name" th:value="${user.name}" class="input-field font-semibold">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Registry ID</label>
+                    <input type="text" readonly th:value="${user.id}" class="input-field bg-gray-100 text-gray-400 cursor-not-allowed">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-8">
+                <div class="space-y-2">
+                    <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Email Path (Static)</label>
+                    <input type="text" readonly th:value="${user.email}" class="input-field bg-gray-100 text-gray-400 cursor-not-allowed">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Active Module</label>
+                    <div class="input-field bg-gray-50 flex items-center gap-2">
+                        <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                        <span class="font-bold text-blue-600" th:text="${user.role}"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conditional fields -->
+            <div th:if="${user.role == 'STUDENT'}" class="space-y-2">
+                <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Grade Level</label>
+                <input type="text" name="grade" th:value="${user.grade}" class="input-field">
+            </div>
+
+            <div th:if="${user.role == 'TUTOR'}" class="grid grid-cols-2 gap-8">
+                <div class="space-y-2">
+                    <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Domain Expertise</label>
+                    <input type="text" name="subject" th:value="${user.specialization}" class="input-field">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Unit Price (USD)</label>
+                    <input type="number" name="rate" th:value="${user.hourlyRate}" step="0.01" class="input-field">
+                </div>
+            </div>
+
+            <div class="pt-6 border-t border-gray-100 flex justify-between items-center">
+                <p th:if="${param.updated}" class="text-[11px] font-bold text-green-500 uppercase tracking-widest">Configuration Updated Successfully</p>
+                <div th:unless="${param.updated}"></div>
+                <button type="submit" class="btn-primary">Commit Changes</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="mt-8 flex justify-end">
+        <a th:href="@{'/users/delete/' + ${user.id}}"
+           onclick="return confirm('WARNING: Are you sure you want to terminate this identity node?')"
+           class="text-[11px] font-bold text-red-400 hover:text-red-600 uppercase tracking-widest transition-colors">Terminte Node Profile</a>
+    </div>
+</main>
 </body>
 </html>
