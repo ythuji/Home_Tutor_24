@@ -1,10 +1,96 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Register Admin - TutorSync Admin</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        .panel { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 40px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .nav-sidebar { width: 280px; background: white; border-right: 1px solid #e2e8f0; height: calc(100vh - 80px); padding: 32px; flex-shrink: 0; overflow-y: auto; }
+        .sidebar-link { display: flex; align-items: center; gap: 12px; padding: 12px 0; font-size: 13px; font-weight: 500; color: #64748b; transition: all 0.2s; }
+        .sidebar-link:hover { color: #2563eb; font-weight: 600; }
+        .input-field { width: 100%; padding: 12px 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 13px; outline: none; transition: border-color 0.2s; margin-bottom: 16px; }
+        .input-field:focus { border-color: #2563eb; }
+        .btn-primary { background: #2563eb; color: white; padding: 12px 24px; border-radius: 4px; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; width: 100%; }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-secondary { background: #e2e8f0; color: #64748b; padding: 12px 24px; border-radius: 4px; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; text-decoration: none; display: inline-block; width: 100%; text-align: center; }
+        .btn-secondary:hover { opacity: 0.8; }
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #64748b; margin-bottom: 8px; }
+        .success-alert { background: #dcfce7; border: 1px solid #86efac; color: #166534; padding: 12px 16px; border-radius: 4px; margin-bottom: 20px; font-size: 13px; font-weight: 500; }
+        .error-alert { background: #fee2e2; border: 1px solid #fecaca; color: #991b1b; padding: 12px 16px; border-radius: 4px; margin-bottom: 20px; font-size: 13px; font-weight: 500; }
+    </style>
 </head>
-<body>
+<body class="bg-[#f8fafc]">
+<!-- Header -->
+<header class="h-20 bg-white border-b border-gray-200 flex items-center justify-between px-10 sticky top-0 z-50">
+    <div class="flex items-center gap-3">
+        <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">S</div>
+        <span class="font-bold text-xl tracking-tight">TutorSync <span class="text-blue-600">Admin</span></span>
+    </div>
+    <div class="flex items-center gap-6">
+        <a th:href="@{/admin/logout}" class="text-[13px] font-bold text-red-500 uppercase hover:underline">Logout</a>
+    </div>
+</header>
 
+<div class="flex">
+    <!-- Sidebar -->
+    <aside class="nav-sidebar">
+        <h3 class="text-[10px] uppercase font-bold text-gray-400 tracking-[0.2em] mb-8">Administration</h3>
+        <nav class="space-y-2">
+            <a th:href="@{/admin/dashboard}" class="sidebar-link">📊 Dashboard</a>
+            <a th:href="@{/admin/users}" class="sidebar-link">👥 Users</a>
+            <a th:href="@{/admin/tutors}" class="sidebar-link">🎓 Tutors</a>
+            <a th:href="@{/admin/bookings}" class="sidebar-link">📅 Bookings</a>
+            <a th:href="@{/admin/payments}" class="sidebar-link">💰 Payments</a>
+            <a th:href="@{/admin/reviews}" class="sidebar-link">⭐ Reviews</a>
+            <a th:href="@{/admin/admins}" class="sidebar-link text-blue-600 font-bold">🛡️ Admins</a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-10">
+        <h1 class="text-3xl font-bold text-gray-900 mb-8 uppercase">+ Register New Admin</h1>
+
+        <div class="max-w-2xl">
+            <div class="panel">
+                <div class="success-alert" th:if="${success}" th:text="${success}">Success message</div>
+                <div class="error-alert" th:if="${error}" th:text="${error}">Error message</div>
+
+                <form th:action="@{/admin/admin/register}" method="POST">
+                    <div class="form-group">
+                        <label class="form-label">Admin Name</label>
+                        <input type="text" name="name" class="input-field" placeholder="Enter admin name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" name="email" class="input-field" placeholder="Enter admin email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" name="password" class="input-field" placeholder="Enter password" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Admin Level</label>
+                        <select name="adminLevel" class="input-field" required>
+                            <option value="">-- Select Admin Level --</option>
+                            <option value="ADMIN">Admin</option>
+                            <option value="SUPER_ADMIN">Super Admin</option>
+                        </select>
+                    </div>
+
+                    <div class="flex gap-4">
+                        <button type="submit" class="btn-primary flex-1">Register Admin</button>
+                        <a th:href="@{/admin/admins}" class="btn-secondary flex-1">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
 </body>
 </html>
