@@ -1,10 +1,94 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Leave a Review - TutorSync</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        .panel { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 40px; }
+        .textarea-field { width: 100%; padding: 12px 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 13px; font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.2s; min-height: 120px; resize: vertical; }
+        .textarea-field:focus { border-color: #2563eb; }
+        .btn-primary { background: #2563eb; color: white; padding: 12px; border-radius: 4px; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer; }
+        .btn-secondary { background: #e2e8f0; color: #64748b; padding: 12px; border-radius: 4px; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer; }
+        .star-rating { display: flex; gap: 12px; margin: 16px 0; }
+        .star { font-size: 32px; cursor: pointer; color: #d1d5db; transition: color 0.2s; }
+        .star.active { color: #f59e0b; }
+        .star:hover { color: #f59e0b; }
+    </style>
 </head>
-<body>
+<body class="bg-[#f8fafc]">
+<!-- Navigation Header -->
+<header class="bg-white border-b border-gray-200 py-4 px-10 sticky top-0 z-50">
+    <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">S</div>
+            <a th:href="@{/dashboard}" class="font-bold text-lg text-blue-600 hover:opacity-80">TutorSync</a>
+        </div>
+        <div class="flex gap-6 items-center">
+            <a th:href="@{/reviews/my-reviews}" class="text-[13px] font-bold text-gray-600 uppercase hover:text-blue-600">My Reviews</a>
+            <a th:href="@{/dashboard}" class="text-[13px] font-bold text-blue-600 uppercase hover:opacity-80">← Back to Dashboard</a>
+        </div>
+    </div>
+</header>
 
+<div class="flex items-center justify-center min-h-[calc(100vh-80px)] px-6 py-6">
+    <div class="max-w-md w-full">
+        <div class="panel shadow-sm">
+            <h2 class="text-xl font-bold uppercase tracking-widest text-center mb-2">Leave Your Review</h2>
+            <p class="text-center text-gray-400 text-[11px] uppercase tracking-widest mb-10" th:text="'For: ' + ${tutor.name}"></p>
+
+            <!-- Error message if not eligible -->
+            <div th:if="${errorMessage}" class="bg-red-50 border border-red-200 rounded px-4 py-3 mb-6">
+                <p class="text-[12px] font-semibold text-red-600" th:text="${errorMessage}"></p>
+            </div>
+
+            <!-- Show form only if eligible -->
+            <form th:if="${isEligible}" th:action="@{/reviews/save}" method="POST" class="space-y-6">
+                <input type="hidden" name="tutorId" th:value="${tutor.id}">
+
+                <div class="flex flex-col items-center mb-8">
+                    <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-[4px] flex items-center justify-center font-bold text-2xl mb-3" th:text="${tutor.name[0]}"></div>
+                    <span class="text-[12px] text-gray-600 font-medium" th:text="${tutor.specialization + ' Tutor'}"></span>
+                </div>
+
+                <div>
+                    <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest block mb-3">Your Rating</label>
+                    <div class="star-rating">
+                        <span class="star" onclick="setRating(1)">★</span>
+                        <span class="star" onclick="setRating(2)">★</span>
+                        <span class="star" onclick="setRating(3)">★</span>
+                        <span class="star" onclick="setRating(4)">★</span>
+                        <span class="star" onclick="setRating(5)">★</span>
+                    </div>
+                    <input type="hidden" id="ratingInput" name="rating" value="0" required>
+                </div>
+
+                <div>
+                    <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest block mb-2">Your Feedback</label>
+                    <textarea name="comment" class="textarea-field" placeholder="Share your experience with this tutor..." required></textarea>
+                </div>
+
+                <button type="submit" class="w-full btn-primary">Post Review</button>
+                <a th:href="@{/tutors/list}" class="block w-full text-center btn-secondary">Cancel</a>
+            </form>
+
+            <!-- Show message if not eligible -->
+            <div th:unless="${isEligible}" class="space-y-4">
+                <p class="text-center text-[12px] text-gray-600">To leave a review, you must have a paid booking with this tutor.</p>
+                <a th:href="@{/bookings/list}" class="block w-full text-center btn-primary">View My Bookings</a>
+                <a th:href="@{/tutors/list}" class="block w-full text-center btn-secondary">Back to Tutors</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function setRating(stars) {
+            document.getElementById('ratingInput').value = stars;
+            document.querySelectorAll('.star').forEach((star, index) => {
+                star.classList.toggle('active', index < stars);
+            });
+        }
+    </script>
 </body>
 </html>
