@@ -1,10 +1,252 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TutorSync | Find the Right Tutor Faster</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --bg-soft: #f8fbff;
+            --card-border: rgba(148, 163, 184, 0.35);
+        }
+
+        * {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background:
+                    radial-gradient(circle at 10% 5%, #dbeafe 0, transparent 32%),
+                    radial-gradient(circle at 85% 0%, #bfdbfe 0, transparent 35%),
+                    linear-gradient(180deg, #f8fbff 0%, #eef6ff 55%, #ffffff 100%);
+            color: #0f172a;
+            overflow-x: hidden;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            box-shadow: 0 20px 40px rgba(30, 64, 175, 0.12);
+        }
+
+        .glow { box-shadow: 0 0 0 1px rgba(147, 197, 253, 0.45), 0 18px 45px rgba(37, 99, 235, 0.16); }
+
+        .hero-grid {
+            background-image:
+                    linear-gradient(rgba(37, 99, 235, 0.08) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(37, 99, 235, 0.08) 1px, transparent 1px);
+            background-size: 44px 44px;
+        }
+
+        .floating-card {
+            animation: floatY 6s ease-in-out infinite;
+        }
+
+        .floating-card.delay {
+            animation-delay: 2s;
+        }
+
+        @keyframes floatY {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+        }
+
+        .animated-item {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .animated-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feature-card {
+            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(59, 130, 246, 0.5);
+            box-shadow: 0 18px 30px rgba(37, 99, 235, 0.15);
+        }
+
+        .pulse-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 9999px;
+            background: #22c55e;
+            position: relative;
+        }
+
+        .pulse-dot::after {
+            content: "";
+            position: absolute;
+            inset: -6px;
+            border-radius: inherit;
+            border: 2px solid rgba(34, 197, 94, 0.5);
+            animation: pulse 2s linear infinite;
+        }
+
+        @keyframes pulse {
+            from { transform: scale(0.8); opacity: 1; }
+            to { transform: scale(1.8); opacity: 0; }
+        }
+    </style>
 </head>
 <body>
+<nav class="sticky top-4 z-50 px-4 md:px-8">
+    <div class="mx-auto max-w-7xl rounded-2xl glass-panel px-5 py-4 flex flex-wrap gap-4 justify-between items-center">
+        <a th:href="@{/}" class="flex items-center gap-3">
+            <span class="h-9 w-9 rounded-xl bg-gradient-to-br from-blue-400 to-indigo-600 grid place-items-center font-black text-white">S</span>
+            <span class="text-xl md:text-2xl font-bold text-blue-700">TutorSync</span>
+        </a>
 
+        <div class="flex flex-wrap items-center gap-3 text-sm md:text-base">
+            <a href="#features" class="text-slate-600 hover:text-blue-700 transition">Features</a>
+            <a th:href="@{/about}" class="text-slate-600 hover:text-blue-700 transition">About</a>
+            <a th:href="@{/admin/login}" class="text-slate-600 hover:text-blue-700 transition"></a>
+            <a th:href="@{/login}" class="rounded-xl bg-white px-4 py-2 font-semibold text-slate-900 hover:bg-slate-100 transition border border-slate-200">Login</a>
+            <a th:href="@{/users/register}" class="rounded-xl bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700 transition">Register Student</a>
+            <a th:href="@{/tutors/register}" class="rounded-xl border border-emerald-300/50 bg-emerald-500/80 px-4 py-2 font-semibold text-white hover:bg-emerald-500 transition">Register Tutor</a>
+        </div>
+    </div>
+</nav>
+
+<header class="hero-grid px-4 md:px-8 pt-12 pb-16 md:pt-20 md:pb-24">
+    <div class="mx-auto max-w-7xl grid lg:grid-cols-2 gap-10 items-center">
+        <section class="animated-item">
+            <div class="inline-flex items-center gap-3 rounded-full border border-blue-200 px-4 py-2 text-blue-700 mb-6 glass-panel">
+                <span class="pulse-dot"></span>
+                <span>Smart matching now active in your city</span>
+            </div>
+            <h1 class="text-4xl md:text-6xl font-extrabold leading-tight text-slate-900">
+                Make Learning Personal.<br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Book Expert Tutors in Minutes.</span>
+            </h1>
+            <p class="mt-6 text-lg text-slate-600 max-w-xl">
+                TutorSync helps students discover trusted tutors, compare expertise, and schedule sessions without friction.
+                Fast onboarding, secure payments, and review-backed confidence in one modern platform.
+            </p>
+            <div class="mt-8 flex flex-wrap gap-4">
+                <a th:href="@{/users/register}" class="rounded-xl bg-blue-600 px-6 py-3 text-white font-semibold hover:translate-y-[-2px] hover:bg-blue-700 transition">Start as Student</a>
+                <a th:href="@{/tutors/register}" class="rounded-xl border border-blue-300 bg-blue-50 px-6 py-3 text-blue-700 font-semibold hover:bg-blue-100 transition">Join as Tutor</a>
+            </div>
+        </section>
+
+        <section class="relative animated-item">
+            <div class="glass-panel glow rounded-3xl p-6 md:p-8">
+                <h2 class="text-xl font-semibold text-slate-900 mb-5">Live Platform Snapshot</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="rounded-2xl bg-blue-50 p-4 floating-card border border-blue-100">
+                        <p class="text-3xl font-extrabold text-blue-700">500+</p>
+                        <p class="text-sm text-slate-600">Active students</p>
+                    </div>
+                    <div class="rounded-2xl bg-blue-50 p-4 floating-card delay border border-blue-100">
+                        <p class="text-3xl font-extrabold text-blue-700">150+</p>
+                        <p class="text-sm text-slate-600">Expert tutors</p>
+                    </div>
+                    <div class="rounded-2xl bg-blue-50 p-4 floating-card delay border border-blue-100">
+                        <p class="text-3xl font-extrabold text-blue-700">5,000+</p>
+                        <p class="text-sm text-slate-600">Sessions delivered</p>
+                    </div>
+                    <div class="rounded-2xl bg-blue-50 p-4 floating-card border border-blue-100">
+                        <p class="text-3xl font-extrabold text-blue-700">4.8</p>
+                        <p class="text-sm text-slate-600">Average rating</p>
+                    </div>
+                </div>
+            </div>
+            <div class="absolute -z-10 -inset-2 bg-gradient-to-r from-blue-300/50 to-sky-300/50 blur-2xl rounded-3xl"></div>
+        </section>
+    </div>
+</header>
+
+<main class="px-4 md:px-8 pb-20">
+    <section id="features" class="mx-auto max-w-7xl mb-16">
+        <div class="text-center animated-item">
+            <h2 class="text-3xl md:text-5xl font-bold text-slate-900">Why Students Love TutorSync</h2>
+            <p class="mt-4 text-slate-600 max-w-2xl mx-auto">
+                Every key workflow is designed for speed and trust: discovery, booking, payment, and feedback.
+            </p>
+        </div>
+
+        <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <article class="feature-card animated-item glass-panel rounded-2xl p-6">
+                <p class="text-3xl mb-4">🎯</p>
+                <h3 class="text-xl font-semibold text-slate-900">Smart Tutor Discovery</h3>
+                <p class="text-slate-600 mt-3">Filter by subject, experience, and ratings to instantly shortlist tutors who match your goals.</p>
+            </article>
+            <article class="feature-card animated-item glass-panel rounded-2xl p-6">
+                <p class="text-3xl mb-4">🗓️</p>
+                <h3 class="text-xl font-semibold text-slate-900">Instant Booking Flow</h3>
+                <p class="text-slate-600 mt-3">Book sessions in a clean calendar-based flow with clear confirmation and booking visibility.</p>
+            </article>
+            <article class="feature-card animated-item glass-panel rounded-2xl p-6">
+                <p class="text-3xl mb-4">🔐</p>
+                <h3 class="text-xl font-semibold text-slate-900">Secure Payment Layer</h3>
+                <p class="text-slate-600 mt-3">Use saved cards and protected transactions built for confidence and smooth checkout.</p>
+            </article>
+            <article class="feature-card animated-item glass-panel rounded-2xl p-6">
+                <p class="text-3xl mb-4">⭐</p>
+                <h3 class="text-xl font-semibold text-slate-900">Real Review Signals</h3>
+                <p class="text-slate-600 mt-3">See authentic feedback from learners before booking, reducing guesswork every time.</p>
+            </article>
+            <article class="feature-card animated-item glass-panel rounded-2xl p-6">
+                <p class="text-3xl mb-4">📈</p>
+                <h3 class="text-xl font-semibold text-slate-900">Progress Visibility</h3>
+                <p class="text-slate-600 mt-3">Track session history and tutor performance to guide better decisions over time.</p>
+            </article>
+            <article class="feature-card animated-item glass-panel rounded-2xl p-6">
+                <p class="text-3xl mb-4">🤝</p>
+                <h3 class="text-xl font-semibold text-slate-900">Built for Both Sides</h3>
+                <p class="text-slate-600 mt-3">Students and tutors each get focused onboarding with dedicated registration journeys.</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="mx-auto max-w-7xl animated-item">
+        <div class="glass-panel rounded-3xl p-8 md:p-12 text-center">
+            <h2 class="text-3xl md:text-5xl font-bold text-slate-900">Ready to Transform Learning?</h2>
+            <p class="text-slate-600 mt-4 max-w-2xl mx-auto">
+                Join TutorSync and make every lesson easier to schedule, safer to pay for, and better matched to student needs.
+            </p>
+            <div class="mt-8 flex flex-wrap justify-center gap-4">
+                <a th:href="@{/users/register}" class="rounded-xl bg-blue-600 px-6 py-3 text-white font-semibold hover:translate-y-[-2px] hover:bg-blue-700 transition">Create Student Account</a>
+                <a th:href="@{/login}" class="rounded-xl border border-blue-300 bg-blue-50 px-6 py-3 text-blue-700 font-semibold hover:bg-blue-100 transition">Sign In</a>
+                <a th:href="@{/about}" class="rounded-xl border border-indigo-200 bg-indigo-50 px-6 py-3 text-indigo-700 font-semibold hover:bg-indigo-100 transition">Learn About Us</a>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="px-4 md:px-8 pb-8">
+    <div class="mx-auto max-w-7xl rounded-2xl glass-panel p-6 flex flex-col md:flex-row justify-between gap-4 text-sm">
+        <p class="text-slate-600">&copy; 2026 TutorSync. Building better tutoring journeys.</p>
+        <div class="flex flex-wrap gap-4 text-blue-600">
+            <a th:href="@{/}" class="hover:text-blue-800 transition">Home</a>
+            <a th:href="@{/about}" class="hover:text-blue-800 transition">About</a>
+            <a th:href="@{/admin/login}" class="hover:text-blue-800 transition"></a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.animated-item').forEach((item) => observer.observe(item));
+</script>
 </body>
 </html>
