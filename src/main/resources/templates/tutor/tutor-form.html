@@ -1,68 +1,105 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <title>Tutor Form - TutorSync</title>
-    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <meta charset="UTF-8">
+    <title>Tutor Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
-        .panel { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 40px; }
-        .input-field { width: 100%; padding: 12px 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 13px; outline: none; transition: border-color 0.2s; }
-        .input-field:focus { border-color: #2563eb; }
-        .btn-primary { background: #2563eb; color: white; padding: 12px; border-radius: 4px; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; }
+        body { background-color: #f8f9fa; }
+        .form-card {
+            max-width: 600px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        }
+        .form-title { color: #2c3e50; margin-bottom: 24px; font-weight: 600; }
+        .btn-primary { background-color: #2c3e50; border: none; }
+        .btn-primary:hover { background-color: #34495e; }
     </style>
 </head>
-<body class="bg-[#f8fafc]">
-<!-- Navigation Header -->
-<header class="bg-white border-b border-gray-200 py-4 px-10 sticky top-0 z-50">
-    <div class="flex items-center justify-between">
-        <div class="flex items-center gap-3">
-            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">S</div>
-            <a th:href="@{/dashboard}" class="font-bold text-lg text-blue-600 hover:opacity-80">TutorSync</a>
+<body>
+<div class="form-card">
+
+    <!-- Title changes based on add or edit -->
+    <h2 class="form-title" th:text="${action == 'edit'} ? 'Edit Tutor' : 'Add New Tutor'"></h2>
+
+    <!-- Form action changes based on add or edit -->
+    <form th:action="${action == 'edit'} ? @{/tutors/edit/{id}(id=${tutor.tutorId})} : @{/tutors/add}"
+          method="post">
+
+        <div class="mb-3">
+            <label class="form-label">Tutor ID</label>
+            <input type="text" name="tutorId" class="form-control"
+                   th:value="${tutor.tutorId}"
+                   th:readonly="${action == 'edit'}"
+                   placeholder="e.g. T001" required>
         </div>
-        <div class="flex gap-6 items-center">
-            <a th:href="@{/tutors/list}" class="text-[13px] font-bold text-gray-600 uppercase hover:text-blue-600">Tutors</a>
-            <a th:href="@{/dashboard}" class="text-[13px] font-bold text-blue-600 uppercase hover:opacity-80">← Back to Dashboard</a>
+        <div class="mb-3">
+            <label class="form-label">Full Name</label>
+            <input type="text" name="name" class="form-control"
+                   th:value="${tutor.name}"
+                   placeholder="Enter full name" required>
         </div>
-    </div>
-</header>
-
-<div class="flex items-center justify-center py-6">
-    <div class="max-w-md w-full px-6">
-        <div class="panel shadow-sm">
-            <h2 class="text-xl font-bold uppercase tracking-widest text-center mb-10" th:text="${tutor == null ? 'Initialize Tutor Node' : 'Update Node Config'}">Node Operation</h2>
-
-            <form th:action="@{/tutors/save}" method="POST" class="space-y-6">
-                <!-- Hidden ID for updates -->
-                <input type="hidden" name="id" th:value="${tutor?.id}">
-
-                <div class="space-y-1">
-                    <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Master Identity</label>
-                    <input type="text" name="name" th:value="${tutor?.name}" placeholder="FULL NAME" required class="input-field">
-                </div>
-
-                <div class="space-y-1">
-                    <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Email Access Path</label>
-                    <input type="email" name="email" th:value="${tutor?.email}" placeholder="EMAIL ADDRESS" required class="input-field">
-                </div>
-
-                <div class="space-y-1">
-                    <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Specialization Domain</label>
-                    <input type="text" name="specialization" th:value="${tutor?.specialization}" placeholder="e.g. DATA STRUCTURES" required class="input-field">
-                </div>
-
-                <div class="space-y-1">
-                    <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Pricing Structure (USD/HR)</label>
-                    <input type="number" name="rate" th:value="${tutor?.hourlyRate}" placeholder="0.00" step="0.01" required class="input-field">
-                </div>
-
-                <button type="submit" class="w-full btn-primary" th:text="${tutor == null ? 'Commit to Registry' : 'Update Registry Record'}">Execute Command</button>
-            </form>
-
-            <div class="mt-8 text-center border-t border-gray-100 pt-6">
-                <a th:href="@{/tutors/list}" class="text-[11px] font-bold text-gray-400 uppercase tracking-widest hover:text-blue-600">Abort Operation & Return</a>
-            </div>
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control"
+                   th:value="${tutor.email}"
+                   placeholder="Enter email" required>
         </div>
-    </div>
+        <div class="mb-3">
+            <label class="form-label">Phone</label>
+            <input type="text" name="phone" class="form-control"
+                   th:value="${tutor.phone}"
+                   placeholder="Enter phone number" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Subject</label>
+            <input type="text" name="subject" class="form-control"
+                   th:value="${tutor.subject}"
+                   placeholder="e.g. Mathematics" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Experience (years)</label>
+            <input type="number" name="experienceYears" class="form-control"
+                   th:value="${tutor.experienceYears}"
+                   min="0" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Availability</label>
+            <select name="availability" class="form-control">
+                <option value="Morning"
+                        th:selected="${tutor.availability == 'Morning'}">Morning</option>
+                <option value="Evening"
+                        th:selected="${tutor.availability == 'Evening'}">Evening</option>
+                <option value="Weekend"
+                        th:selected="${tutor.availability == 'Weekend'}">Weekend</option>
+                <option value="Flexible"
+                        th:selected="${tutor.availability == 'Flexible'}">Flexible</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Hourly Rate (Rs.)</label>
+            <input type="number" name="hourlyRate" class="form-control"
+                   th:value="${tutor.hourlyRate}"
+                   min="0" step="0.01" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Tutor Type</label>
+            <select name="tutorType" class="form-control">
+                <option value="fulltime"
+                        th:selected="${tutor.tutorType == 'fulltime'}">Full Time</option>
+                <option value="parttime"
+                        th:selected="${tutor.tutorType == 'parttime'}">Part Time</option>
+            </select>
+        </div>
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary px-4"
+                    th:text="${action == 'edit'} ? 'Update Tutor' : 'Add Tutor'"></button>
+            <a href="/tutors" class="btn btn-secondary px-4">Cancel</a>
+        </div>
+    </form>
+</div>
 </body>
 </html>
