@@ -50,9 +50,10 @@ public class Tutor extends User {
                 " | Type: " + tutorType;
     }
 
-    public String toFileString() {
-        return tutorId + "," + getName() + "," + getEmail() + "," +
-                getPhone() + "," + subject + "," + experienceYears + "," +
-                availability + "," + hourlyRate + "," + tutorType;
+    @Override
+    public String toString() {
+        return tutorId + "|" + getName() + "|" + getEmail() + "|" +
+                getPhone() + "|" + subject + "|" + experienceYears + "|" +
+                availability + "|" + hourlyRate + "|" + tutorType;
     }
 }
