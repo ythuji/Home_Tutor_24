@@ -56,12 +56,11 @@ public class AuthController {
 
     @PostMapping("/users/register")
     public String registerUser(@RequestParam String name, @RequestParam String email,
-                               @RequestParam String password, @RequestParam(required = false) String phone,
-                               @RequestParam(required = false) String address, Model model) {
+                               @RequestParam String password, Model model) {
         User existingUser = userService.getUserByEmail(email);
         if (existingUser != null) {
             model.addAttribute("error", "Email already exists");
-            return "auth/register";
+            return "user/register";
         }
 
         String userId = IDGenerator.generate("U");

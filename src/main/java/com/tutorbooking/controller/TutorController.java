@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/tutors")
 public class TutorController {
 
-    private TutorService tutorService = new TutorService();
+    private final TutorService tutorService = new TutorService();
 
     // Show all tutors
     @GetMapping

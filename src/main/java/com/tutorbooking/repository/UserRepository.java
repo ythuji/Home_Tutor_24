@@ -15,16 +15,12 @@ public class UserRepository {
         List<User> users = new ArrayList<>();
         for (String line : lines) {
             String[] parts = line.split("\\|", -1);
-            if (parts.length < 5) continue; // Skip invalid lines
+            if (parts.length < 7) continue; // Skip invalid lines
 
-            if (parts[4].equals("STUDENT")) {
-                String grade = parts.length > 5 ? parts[5] : "";
+            String role = parts[5];
+            if ("STUDENT".equals(role)) {
+                String grade = parts[6];
                 users.add(new Student(parts[0], parts[1], parts[2], parts[3], grade));
-            } else if (parts[4].equals("TUTOR")) {
-                String phone = parts.length > 5 ? parts[5] : "";
-                String specialization = parts.length > 6 ? parts[6] : "";
-                double rate = parts.length > 7 ? Double.parseDouble(parts[7]) : 0.0;
-                users.add(new Tutor(parts[0], parts[1], parts[2], parts[3], phone, specialization, 0, rate, 0.0));
             }
         }
         return users;
