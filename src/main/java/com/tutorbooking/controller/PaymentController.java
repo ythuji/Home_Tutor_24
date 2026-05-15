@@ -51,7 +51,7 @@ public class PaymentController {
     @PostMapping("/process")
     public String makePayment(@RequestParam String bookingId, @RequestParam String studentId,
                               @RequestParam Double amount, @RequestParam String paymentMethod,
-                              @RequestParam(required = false) String cardId, HttpSession session) {
+                              @RequestParam(required = false) String cardId, HttpSession session, Model model) {
         User user = (User) session.getAttribute("loggedUser");
         if (user == null || !user.getId().equals(studentId)) {
             return "redirect:/login";
@@ -59,7 +59,9 @@ public class PaymentController {
 
         if ("CARD".equals(paymentMethod) && cardId != null) {
             if (!cardService.cardBelongsToUser(cardId, studentId)) {
-                return "redirect:/payments/create?bookingId=" + bookingId + "&error=Invalid card";
+                model.addAttribute("error", "Invalid card");
+                model.addAttribute("bookingId", bookingId);
+                return "payment/make-payment";
             }
         }
 
@@ -82,7 +84,7 @@ public class PaymentController {
     }
 
     @GetMapping("/cards/add")
-    public String showAddCardForm(HttpSession session, Model model) {
+    public String showAddCardForm(HttpSession session) {
         User user = (User) session.getAttribute("loggedUser");
         if (user == null)
             return "redirect:/login";

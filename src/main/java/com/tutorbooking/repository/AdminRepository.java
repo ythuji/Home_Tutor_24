@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AdminRepository {
-    private static final String FILE_NAME = "admins.txt";
+    private static final String FILE_NAME = "admin.txt";
 
     public List<Admin> findAll() {
         List<String> lines = FileHelper.readAllLines(FILE_NAME);
@@ -30,7 +30,7 @@ public class AdminRepository {
 
     public Admin findById(String id) {
         return findAll().stream()
-                .filter(a -> a.getId().equals(id))
+                .filter(a -> a.toString().split("\\|")[0].equals(id))
                 .findFirst()
                 .orElse(null);
     }

@@ -4,7 +4,7 @@ public class Student extends User {
     private String grade;
 
     public Student() {
-        super();
+        super("", "", "");
         this.setRole("STUDENT");
     }
 
@@ -19,5 +19,10 @@ public class Student extends User {
     @Override
     public String toString() {
         return super.toString() + "|" + grade;
+    }
+
+    @Override
+    public String getDetails() {
+        return "ID: " + getId() + " | Name: " + getName() + " | Grade: " + grade;
     }
 }

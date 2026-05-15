@@ -1,97 +1,172 @@
 package com.tutorbooking.service;
 
+import com.tutorbooking.model.Admin;
 import com.tutorbooking.model.Booking;
 import com.tutorbooking.model.Payment;
-import com.tutorbooking.repository.BookingRepository;
-import com.tutorbooking.repository.PaymentRepository;
+import com.tutorbooking.model.Review;
+import com.tutorbooking.model.Tutor;
+import com.tutorbooking.model.User;
+import com.tutorbooking.repository.AdminRepository;
 import org.springframework.stereotype.Service;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
-public class BookingService {
-    private final BookingRepository bookingRepository = new BookingRepository();
-    private final PaymentRepository paymentRepository = new PaymentRepository();
+public class AdminService {
+    private final AdminRepository adminRepository = new AdminRepository();
+    private final UserService userService = new UserService();
+    private final TutorService tutorService = new TutorService();
+    private final BookingService bookingService = new BookingService();
+    private final PaymentService paymentService = new PaymentService();
+    private final ReviewService reviewService = new ReviewService();
+
+    public Admin authenticateAdmin(String email, String password) {
+        Admin admin = adminRepository.findByEmail(email);
+        if (admin != null && admin.getPassword().equals(password)) {
+            return admin;
+        }
+        return null;
+    }
+
+    public List<Admin> getAllAdmins() {
+        return adminRepository.findAll();
+    }
+
+    public Admin getAdminByEmail(String email) {
+        return adminRepository.findByEmail(email);
+    }
+
+    public Admin getAdminById(String id) {
+        return adminRepository.findById(id);
+    }
+
+    public void createAdmin(Admin admin) {
+        adminRepository.save(admin);
+    }
+
+    public boolean updateAdmin(String id, Admin admin) {
+        return adminRepository.update(id, admin);
+    }
+
+    public boolean deleteAdmin(String id) {
+        return adminRepository.deleteById(id);
+    }
+
+    public List<User> getAllUsers() {
+        List<User> users = new ArrayList<>(userService.getAllUsers());
+        users.addAll(tutorService.getAllTutors());
+        return users;
+    }
+
+    public boolean deleteUser(String id) {
+        return userService.deleteUser(id);
+    }
+
+    public List<Tutor> getAllTutors() {
+        return tutorService.getAllTutors();
+    }
+
+    public boolean deleteTutor(String id) {
+        return tutorService.deleteTutor(id);
+    }
 
     public List<Booking> getAllBookings() {
-        return bookingRepository.findAll();
+        return bookingService.getAllBookings();
+    }
+
+    public boolean deleteBooking(String id) {
+        bookingService.deleteBooking(id);
+        return true;
+    }
+
+    public List<Payment> getAllPayments() {
+        return paymentService.getAllPayments();
+    }
+
+    public boolean deletePayment(String id) {
+        return paymentService.deletePayment(id);
+    }
+
+    public List<Review> getAllReviews() {
+        return reviewService.getAllReviews();
+    }
+
+    public boolean deleteReview(String id) {
+        return reviewService.deleteReview(id);
+    }
+
+    public int getTotalUsers() {
+        return getAllUsers().size();
+    }
+
+    public int getTotalTutors() {
+        return getAllTutors().size();
+    }
+
+    public int getTotalBookings() {
+        return getAllBookings().size();
+    }
+
+    public int getTotalReviews() {
+        return getAllReviews().size();
+    }
+
+    public double getTotalRevenue() {
+        return getAllPayments().stream()
+                .filter(p -> "PAID".equals(p.getStatus()))
+                .mapToDouble(Payment::getAmount)
+                .sum();
+    }
+
+    public double getAverageRating() {
+        return getAllReviews().stream()
+                .mapToInt(Review::getRating)
+                .average()
+                .orElse(0.0);
+    }
+
+    public long getCompletedBookings() {
+        return getAllBookings().stream()
+                .filter(b -> "COMPLETED".equalsIgnoreCase(b.getStatus()))
+                .count();
+    }
+
+    public long getPendingBookings() {
+        return getAllBookings().stream()
+                .filter(b -> "PENDING".equalsIgnoreCase(b.getStatus()))
+                .count();
     }
 
     public List<Booking> getBookingsByStudent(String studentId) {
-        return getAllBookings().stream()
-                .filter(b -> b.getStudentId().equals(studentId))
-                .collect(Collectors.toList());
+        return bookingService.getBookingsByStudent(studentId);
     }
 
     public List<Booking> getBookingsByTutor(String tutorId) {
-        return getAllBookings().stream()
-                .filter(b -> b.getTutorId().equals(tutorId))
-                .collect(Collectors.toList());
+        return bookingService.getBookingsByTutor(tutorId);
     }
 
     public Booking getBookingById(String id) {
-        return bookingRepository.findById(id);
+        return bookingService.getBookingById(id);
     }
 
     public void createBooking(Booking booking) {
-        bookingRepository.save(booking);
+        bookingService.createBooking(booking);
     }
 
     public void updateBookingStatus(String id, String status) {
-        Booking booking = bookingRepository.findById(id);
-        if (booking != null) {
-            booking.setStatus(status);
-            bookingRepository.update(id, booking);
-        }
+        bookingService.updateBookingStatus(id, status);
     }
 
     public void updateBooking(String id, String subject, String dateTime) {
-        Booking booking = bookingRepository.findById(id);
-        if (booking != null) {
-            booking.setSubject(subject);
-            bookingRepository.update(id, new Booking(id, booking.getStudentId(), booking.getTutorId(), subject,
-                    dateTime, booking.getStatus()));
-        }
+        bookingService.updateBooking(id, subject, dateTime);
     }
 
     public boolean canEditBooking(String id) {
-        Booking booking = getBookingById(id);
-        if (booking == null || !"PENDING".equals(booking.getStatus())) {
-            return false;
-        }
-        // Check if booking is more than 24 hours away
-        try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-            LocalDateTime bookingDateTime = LocalDateTime.parse(booking.getDateTime(), formatter);
-            LocalDateTime now = LocalDateTime.now();
-            return bookingDateTime.isAfter(now.plusHours(24));
-        } catch (Exception e) {
-            return false;
-        }
+        return bookingService.canEditBooking(id);
     }
 
     public boolean hasPayment(String bookingId) {
-        try {
-            List<Payment> payments = paymentRepository.findAll();
-            return payments.stream()
-                    .anyMatch(p -> p.getBookingId().equals(bookingId) && "PAID".equals(p.getStatus()));
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public void deleteBooking(String id) {
-        // Also delete any associated payments
-        try {
-            List<Payment> payments = paymentRepository.findAll();
-            payments.stream()
-                    .filter(p -> p.getBookingId().equals(id))
-                    .forEach(p -> paymentRepository.deleteById(p.getId()));
-        } catch (Exception e) {
-            // Continue with booking deletion even if payment deletion fails
-        }
-        bookingRepository.deleteById(id);
+        return bookingService.hasPayment(bookingId);
     }
 }

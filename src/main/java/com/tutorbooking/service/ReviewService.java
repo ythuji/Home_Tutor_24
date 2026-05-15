@@ -1,4 +1,3 @@
-package com.tutorbooking.service;
 
 package com.tutorbooking.service;
 
@@ -79,7 +78,7 @@ public class ReviewService {
         // Get all paid payments for this student
         List<Payment> paidPayments = paymentService.getAllPayments().stream()
                 .filter(p -> p.getStudentId().equals(studentId) && "PAID".equals(p.getStatus()))
-                .collect(Collectors.toList());
+                .toList();
 
         // Check if any paid payment corresponds to a booking with this tutor
         for (Payment payment : paidPayments) {

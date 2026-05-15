@@ -79,7 +79,7 @@ public class AdminController {
 
         model.addAttribute("tutors", adminService.getAllTutors());
         model.addAttribute("admin", admin);
-        return "admin/admin-tutors";
+        return "admin/admin-tutor";
     }
 
     // View All Bookings
@@ -238,7 +238,7 @@ public class AdminController {
     @PostMapping("/admin/update/{id}")
     public String updateAdmin(@PathVariable String id, @RequestParam String name,
                               @RequestParam String email, @RequestParam String adminLevel,
-                              HttpSession session, Model model) {
+                              HttpSession session) {
         Admin currentAdmin = (Admin) session.getAttribute("adminUser");
         if (currentAdmin == null)
             return "redirect:/admin/login";
