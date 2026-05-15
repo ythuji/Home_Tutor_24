@@ -1,10 +1,91 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:text="${tutor.name} + ' - Reviews - TutorSync'">Tutor Reviews - TutorSync</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        .panel { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; }
+        .panel-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #64748b; margin-bottom: 24px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .panel-title::after { content: ''; flex: 1; height: 1px; background: #e2e8f0; }
+        .tutor-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; padding: 30px; margin-bottom: 30px; }
+        .tutor-avatar { width: 60px; height: 60px; background: rgba(255,255,255,0.3); border-radius: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; }
+        .review-card { background: white; border: 1px solid #e2e8f0; border-radius: 4px; padding: 20px; margin-bottom: 12px; }
+        .star { color: #f59e0b; font-weight: 800; font-size: 14px; }
+        .btn-primary { background: #2563eb; color: white; padding: 10px 20px; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+    </style>
 </head>
-<body>
+<body class="bg-[#f8fafc]">
+<header class="h-20 bg-white border-b border-gray-200 flex items-center justify-between px-10 mb-12">
+    <div class="flex items-center gap-3">
+        <div class="w-8 h-8 bg-blue-600 rounded-[4px]"></div>
+        <span class="font-bold text-xl tracking-tight" th:text="${tutor.name} + ' - Reviews'">Reviews</span>
+    </div>
+    <div class="flex items-center gap-6">
+        <a th:href="@{/tutors/list}" class="text-[13px] font-medium text-gray-500 hover:text-blue-600">ALL TUTORS</a>
+        <a th:href="@{/dashboard}" class="text-[13px] font-medium text-gray-500 hover:text-blue-600">DASHBOARD</a>
+        <a th:href="@{/logout}" class="text-[13px] font-bold text-red-500 uppercase">LOGOUT</a>
+    </div>
+</header>
 
+<main class="max-w-4xl mx-auto px-6">
+    <!-- Tutor Header -->
+    <div class="tutor-header">
+        <div class="flex items-start justify-between mb-4">
+            <div class="flex gap-4">
+                <div class="tutor-avatar" th:text="${tutor.name[0]}"></div>
+                <div>
+                    <h1 class="text-2xl font-bold mb-1" th:text="${tutor.name}">Name</h1>
+                    <p class="text-sm opacity-90" th:text="${tutor.specialization}">Specialization</p>
+                    <p class="text-sm opacity-90" th:text="${tutor.email}">Email</p>
+                </div>
+            </div>
+            <div class="text-right">
+                <div class="text-3xl font-bold mb-1" th:text="'$' + ${tutor.hourlyRate}">$0</div>
+                <p class="text-sm opacity-90">/Hour</p>
+            </div>
+        </div>
+
+        <div class="pt-4 border-t border-white/20 flex justify-between items-center">
+            <div>
+                <span class="text-[11px] font-bold uppercase opacity-75">Experience</span>
+                <p class="text-lg font-bold" th:text="${tutor.experience}">0</p>
+            </div>
+            <a th:href="@{'/bookings/create?tutorId=' + ${tutor.id}}" class="btn-primary">Book This Tutor</a>
+        </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="panel shadow-sm">
+        <h2 class="panel-title">Student Reviews (<span th:text="${reviews.size()}">0</span>)</h2>
+
+        <div th:if="${reviews.empty}" class="py-20 text-center border-2 border-dashed border-gray-100 rounded-xl">
+            <p class="text-gray-400 font-bold uppercase tracking-widest text-[11px] mb-4">No reviews yet. Be the first!</p>
+            <a th:href="@{'/reviews/add/' + ${tutor.id}}" class="text-[11px] text-blue-600 font-bold uppercase tracking-widest hover:underline">Leave Your Review</a>
+        </div>
+
+        <div class="space-y-4">
+            <div th:each="review : ${reviews}" class="review-card shadow-sm">
+                <div class="flex gap-2 mb-3">
+                    <span th:each="i : ${#numbers.sequence(1, review.rating)}" class="star">★</span>
+                </div>
+                <p class="text-[13px] text-gray-600 leading-relaxed italic mb-3" th:text="'&quot;' + ${review.comment} + '&quot;'">COMMENT</p>
+                <div class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+                    <span th:text="'Student ID: ' + ${review.studentId}">Student</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-gray-100">
+            <a th:if="${session.loggedUser != null && session.loggedUser.role == 'STUDENT'}"
+               th:href="@{'/reviews/add/' + ${tutor.id}}"
+               class="btn-primary">+ Leave Your Review</a>
+            <a th:if="${session.loggedUser == null}"
+               th:href="@{/login}"
+               class="btn-primary">Login to Leave Review</a>
+        </div>
+    </div>
+</main>
 </body>
 </html>

@@ -1,10 +1,92 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Financial Ledger - TutorSync</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        * { font-family: 'Inter', sans-serif; }
+        body { background: #f8fafc; }
+        header { background: white; border-bottom: 1px solid #e2e8f0; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        header h1 { font-size: 20px; font-weight: bold; color: #1e293b; }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a { text-decoration: none; font-size: 12px; font-weight: 600; color: #64748b; transition: color 0.2s; }
+        .nav-links a:hover { color: #667eea; }
+        .nav-links a.logout { color: #ef4444; }
+        main { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+        .panel { background: white; border-radius: 12px; padding: 30px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .panel-title { font-size: 14px; font-weight: 600; color: #1e293b; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .btn-cards { background: #667eea; color: white; padding: 10px 16px; border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: 600; display: inline-block; }
+        .btn-cards:hover { background: #5568d3; }
+        table { width: 100%; }
+        thead { background: #f8fafc; }
+        th { text-align: left; font-size: 12px; font-weight: 600; color: #64748b; padding: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+        td { padding: 14px 12px; border-bottom: 1px solid #e2e8f0; font-size: 13px; }
+        tr:hover { background: #f8fafc; }
+        .status-badge { padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; display: inline-block; }
+        .status-paid { background: #dcfce7; color: #166534; }
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .empty-state { text-align: center; padding: 60px 20px; }
+        .empty-state i { font-size: 48px; color: #cbd5e1; margin-bottom: 16px; display: block; }
+        .empty-state p { color: #64748b; font-size: 16px; margin-bottom: 24px; }
+        .btn-primary { background: #667eea; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 600; display: inline-block; }
+        .btn-primary:hover { background: #5568d3; }
+    </style>
 </head>
 <body>
+<header>
+    <h1><i class="fas fa-credit-card mr-2"></i> Financial Ledger</h1>
+    <div class="nav-links">
+        <a th:href="@{/dashboard}"><i class="fas fa-home mr-1"></i> DASHBOARD</a>
+        <a th:href="@{/payments/cards}"><i class="fas fa-wallet mr-1"></i> MY CARDS</a>
+        <a th:href="@{/logout}" class="logout"><i class="fas fa-sign-out-alt mr-1"></i> LOGOUT</a>
+    </div>
+</header>
 
+<main>
+    <div class="panel">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="panel-title">
+                <i class="fas fa-history"></i> Your Payment History
+            </h2>
+            <a th:href="@{/payments/cards}" class="btn-cards">
+                <i class="fas fa-wallet mr-1"></i> Manage Cards
+            </a>
+        </div>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Transaction ID</th>
+                <th>Booking ID</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="payment : ${payments}">
+                <td class="font-mono text-blue-600" th:text="${payment.id}">TXN_ID</td>
+                <td class="font-semibold" th:text="${payment.bookingId}">BOOKING_ID</td>
+                <td class="font-bold text-gray-900" th:text="'$' + ${payment.amount}">$0.00</td>
+                <td th:text="${payment.paymentDate}">2026-04-19</td>
+                <td>
+                            <span th:class="${payment.status == 'PAID' ? 'status-badge status-paid' : 'status-badge status-pending'}"
+                                  th:text="${payment.status}">PAID</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div th:if="${#lists.isEmpty(payments)}" class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <p>No payment history yet</p>
+            <a th:href="@{/bookings/list}" class="btn-primary">
+                <i class="fas fa-book mr-1"></i> View Your Bookings
+            </a>
+        </div>
+    </div>
+</main>
 </body>
 </html>

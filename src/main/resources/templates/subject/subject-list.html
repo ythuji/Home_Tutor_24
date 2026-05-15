@@ -1,10 +1,75 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Curriculum Nodes - TutorSync</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        .panel { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; }
+        .panel-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #64748b; margin-bottom: 24px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .panel-title::after { content: ''; flex: 1; height: 1px; background: #e2e8f0; }
+        .input-field { width: 100%; padding: 10px 14px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 13px; outline: none; }
+        .btn-primary { background: #2563eb; color: white; padding: 10px 20px; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+    </style>
 </head>
-<body>
+<body class="bg-[#f8fafc]">
+<header class="h-20 bg-white border-b border-gray-200 flex items-center justify-between px-10 mb-12">
+    <div class="flex items-center gap-3">
+        <div class="w-8 h-8 bg-blue-600 rounded-[4px]"></div>
+        <span class="font-bold text-xl tracking-tight">TutorSync Subjects</span>
+    </div>
+    <div class="flex items-center gap-6">
+        <a th:href="@{/dashboard}" class="text-[13px] font-medium text-gray-500 hover:text-blue-600">DASHBOARD</a>
+        <a th:href="@{/logout}" class="text-[13px] font-bold text-red-500 uppercase">LOGOUT</a>
+    </div>
+</header>
 
+<main class="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-3 gap-12">
+    <!-- Add Subject Form -->
+    <div class="panel h-fit shadow-sm">
+        <h2 class="panel-title">Initialize Subject Node</h2>
+        <form th:action="@{/subjects/add}" method="POST" class="space-y-6">
+            <div class="space-y-1">
+                <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Entity Name</label>
+                <input type="text" name="name" placeholder="e.g. CALCULUS II" required class="input-field">
+            </div>
+            <div class="space-y-1">
+                <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Category Domain</label>
+                <select name="category" class="input-field">
+                    <option value="SCIENCE">SCIENCE</option>
+                    <option value="ARTS">ARTS</option>
+                    <option value="LANGUAGES">LANGUAGES</option>
+                </select>
+            </div>
+            <div class="space-y-1">
+                <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Complexity Level</label>
+                <input type="text" name="level" placeholder="e.g. TERTIARY" required class="input-field">
+            </div>
+            <button type="submit" class="w-full btn-primary">Process Creation</button>
+        </form>
+    </div>
+
+    <!-- Subject List -->
+    <div class="lg:col-span-2 panel shadow-sm">
+        <h2 class="panel-title">Registry Map</h2>
+        <div th:if="${subjects.empty}" class="py-12 text-center text-gray-400 font-bold uppercase tracking-widest text-[10px]">
+            No subject entities defined in curriculum database.
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div th:each="subject : ${subjects}" class="bg-gray-50 border border-gray-100 p-4 rounded-md flex justify-between items-center group">
+                <div>
+                    <h4 class="font-bold text-gray-900 group-hover:text-blue-600 transition-colors" th:text="${subject.name}">NAME</h4>
+                    <div class="flex gap-2 mt-1">
+                        <span class="text-[9px] font-bold text-blue-600 uppercase" th:text="${subject.category}">CATEGORY</span>
+                        <span class="text-[9px] font-bold text-gray-400 uppercase" th:text="${subject.level}">LEVEL</span>
+                    </div>
+                </div>
+                <a th:href="@{'/subjects/delete/' + ${subject.id}}" class="text-gray-300 hover:text-red-500 font-bold text-[10px] uppercase">Terminte</a>
+            </div>
+        </div>
+    </div>
+</main>
 </body>
 </html>
