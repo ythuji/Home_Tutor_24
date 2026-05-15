@@ -16,7 +16,7 @@ public class TutorController {
     @GetMapping
     public String listTutors(Model model) {
         model.addAttribute("tutors", tutorService.getAllTutors());
-        return "tutorList";
+        return "tutor/tutor-list";
     }
 
     // Show add tutor form
@@ -25,7 +25,8 @@ public class TutorController {
         model.addAttribute("tutor", new Tutor(
                 "", "", "", "", "", 0, "", 0.0, ""
         ));
-        return "addTutor";
+        model.addAttribute("action", "add");
+        return "tutor/tutor-form";
     }
 
     // Submit add tutor form
@@ -51,7 +52,8 @@ public class TutorController {
     public String showEditForm(@PathVariable String id, Model model) {
         Tutor tutor = tutorService.getTutorById(id);
         model.addAttribute("tutor", tutor);
-        return "editTutor";
+        model.addAttribute("action", "edit");
+        return "tutor/tutor-form";
     }
 
     // Submit edit form
@@ -84,6 +86,7 @@ public class TutorController {
     public String searchTutor(@RequestParam String id, Model model) {
         Tutor tutor = tutorService.getTutorById(id);
         model.addAttribute("tutor", tutor);
-        return "tutorList";
+        model.addAttribute("tutors", tutorService.getAllTutors());
+        return "tutor/tutor-list";
     }
 }
