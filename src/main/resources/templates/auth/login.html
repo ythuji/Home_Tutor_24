@@ -1,10 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Login - TutorSync</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        .panel { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 40px; }
+        .input-field { width: 100%; padding: 12px 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 13px; outline: none; transition: border-color 0.2s; }
+        .input-field:focus { border-color: #2563eb; }
+        .btn-primary { background: #2563eb; color: white; padding: 12px; border-radius: 4px; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; transition: opacity 0.2s; }
+        .btn-primary:hover { opacity: 0.9; }
+    </style>
 </head>
-<body>
+<body class="bg-[#f8fafc]">
+<!-- Navigation Header -->
+<header class="bg-white border-b border-gray-200 py-4 px-10 sticky top-0 z-50">
+    <div class="max-w-full flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">S</div>
+            <a th:href="@{/}" class="font-bold text-lg text-blue-600 hover:opacity-80">TutorSync</a>
+        </div>
+        <a th:href="@{/}" class="text-[13px] font-bold text-gray-600 uppercase hover:text-blue-600">← Back to Home</a>
+    </div>
+</header>
 
+<div class="flex items-center justify-center min-h-[calc(100vh-80px)]">
+    <div class="max-w-md w-full px-6">
+        <div class="panel shadow-sm">
+            <div class="flex flex-col items-center mb-10">
+                <div class="w-10 h-10 bg-blue-600 rounded-[4px] mb-4"></div>
+                <h2 class="text-xl font-bold uppercase tracking-widest text-center">System Auth</h2>
+                <p class="text-[11px] text-gray-400 font-bold uppercase mt-2 tracking-widest">Verify credentials for access</p>
+            </div>
+
+            <form th:action="@{/login}" method="POST" class="space-y-6">
+                <div class="space-y-1">
+                    <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Email Access Path</label>
+                    <input type="email" name="email" placeholder="EMAIL ADDRESS" required class="input-field">
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Secure Key</label>
+                    <input type="password" name="password" placeholder="PASSWORD" required class="input-field">
+                </div>
+
+                <p th:if="${error}" class="text-red-500 text-[11px] font-bold uppercase tracking-widest text-center" th:text="${error}"></p>
+                <p th:if="${param.registered}" class="text-green-500 text-[11px] font-bold uppercase tracking-widest text-center">Node Provisioned Successfully</p>
+
+                <button type="submit" class="w-full btn-primary">Execute Login</button>
+            </form>
+
+            <div class="mt-8 text-center border-t border-gray-100 pt-6 space-y-3">
+                <div>
+                    <a th:href="@{/users/register}" class="text-[11px] font-bold text-blue-600 uppercase tracking-widest hover:opacity-80">New Node? Initialize Registry</a>
+                </div>
+                <div class="text-[11px] text-gray-400">─── or ───</div>
+                <div>
+                    <a th:href="@{/tutors/register}" class="text-[11px] font-bold text-green-600 uppercase tracking-widest hover:opacity-80">Join as Tutor →</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

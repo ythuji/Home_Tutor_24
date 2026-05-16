@@ -1,10 +1,196 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>My Reviews - TutorSync</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        .panel { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; }
+        .panel-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #64748b; margin-bottom: 24px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .panel-title::after { content: ''; flex: 1; height: 1px; background: #e2e8f0; }
+        .review-card { background: white; border: 1px solid #e2e8f0; border-radius: 4px; padding: 20px; margin-bottom: 12px; transition: all 0.2s; }
+        .review-card.editing { background: #f8fafc; border-color: #3b82f6; }
+        .star { color: #f59e0b; font-weight: 800; font-size: 14px; }
+        .star-selector { display: flex; gap: 8px; margin: 12px 0; }
+        .star-selector span { font-size: 24px; cursor: pointer; color: #d1d5db; transition: color 0.2s; }
+        .star-selector span.active { color: #f59e0b; }
+        .btn-action { font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 6px 12px; border-radius: 4px; border: 1px solid transparent; transition: all 0.2s; cursor: pointer; }
+        .btn-edit { background: #3b82f6; color: white; hover: bg-blue-700; }
+        .btn-edit:hover { background: #2563eb; }
+        .btn-save { background: #10b981; color: white; }
+        .btn-save:hover { background: #059669; }
+        .btn-cancel { background: #6b7280; color: white; }
+        .btn-cancel:hover { background: #4b5563; }
+        .btn-delete { background: #ef4444; color: white; }
+        .btn-delete:hover { background: #dc2626; }
+        .edit-form { display: none; }
+        .edit-form.active { display: block; }
+        .view-mode { display: block; }
+        .view-mode.hidden { display: none; }
+        .textarea-field { width: 100%; padding: 8px 12px; background: white; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 13px; font-family: 'Inter', sans-serif; outline: none; min-height: 80px; resize: vertical; }
+        .textarea-field:focus { border-color: #3b82f6; }
+    </style>
 </head>
-<body>
+<body class="bg-[#f8fafc]">
+<header class="h-20 bg-white border-b border-gray-200 flex items-center justify-between px-10 mb-12">
+    <div class="flex items-center gap-3">
+        <div class="w-8 h-8 bg-blue-600 rounded-[4px]"></div>
+        <span class="font-bold text-xl tracking-tight">My Reviews</span>
+    </div>
+    <div class="flex items-center gap-6">
+        <a th:href="@{/dashboard}" class="text-[13px] font-medium text-gray-500 hover:text-blue-600">DASHBOARD</a>
+        <a th:href="@{/logout}" class="text-[13px] font-bold text-red-500 uppercase">LOGOUT</a>
+    </div>
+</header>
 
+<main class="max-w-4xl mx-auto px-6">
+    <div class="panel shadow-sm">
+        <h2 class="panel-title">My Posted Reviews</h2>
+
+        <div th:if="${reviews.empty}" class="py-20 text-center border-2 border-dashed border-gray-100 rounded-xl">
+            <p class="text-gray-400 font-bold uppercase tracking-widest text-[10px] mb-4">No reviews posted yet.</p>
+            <a th:href="@{/tutors/list}" class="text-[11px] text-blue-600 font-bold uppercase tracking-widest hover:underline">Browse Tutors & Leave Reviews</a>
+        </div>
+
+        <div class="space-y-4">
+            <div th:each="review : ${reviews}" th:id="'review-' + ${review.id}" class="review-card shadow-sm">
+                <!-- VIEW MODE -->
+                <div th:id="'view-' + ${review.id}" class="view-mode">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <div class="flex gap-1 mb-2">
+                                <span th:each="i : ${#numbers.sequence(1, review.rating)}" class="star">★</span>
+                            </div>
+                            <span class="text-[10px] text-gray-400 font-bold uppercase tracking-widest block mb-1">For Tutor ID</span>
+                            <span class="font-bold text-gray-900" th:text="${review.tutorId}">TUTOR_ID</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <button type="button" th:data-review-id="${review.id}" class="btn-action btn-edit btn-edit-trigger">Edit</button>
+                            <button type="button" th:data-review-id="${review.id}" class="btn-action btn-delete btn-delete-trigger">Delete</button>
+                        </div>
+                    </div>
+                    <p class="text-[13px] text-gray-600 leading-relaxed italic" th:text="'&quot;' + ${review.comment} + '&quot;'">COMMENT</p>
+                </div>
+
+                <!-- EDIT MODE -->
+                <div th:id="'edit-' + ${review.id}" class="edit-form">
+                    <form th:action="@{'/reviews/update/' + ${review.id}}" method="POST">
+                        <div class="mb-4">
+                            <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest block mb-2">Update Rating</label>
+                            <div class="star-selector" th:id="'stars-' + ${review.id}">
+                                    <span class="star-btn" th:each="i : ${#numbers.sequence(1, 5)}"
+                                          th:data-rating="${i}"
+                                          th:data-review-id="${review.id}">★</span>
+                            </div>
+                            <input type="hidden" th:id="'rating-' + ${review.id}" name="rating" th:value="${review.rating}" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest block mb-2">Update Feedback</label>
+                            <textarea name="comment" th:id="'comment-' + ${review.id}" class="textarea-field" required th:text="${review.comment}"></textarea>
+                        </div>
+
+                        <div class="flex gap-2">
+                            <button type="submit" class="btn-action btn-save flex-1">Save Changes</button>
+                            <button type="button" th:data-review-id="${review.id}" class="btn-action btn-cancel btn-cancel-trigger flex-1">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    // Attach event listeners when DOM is ready
+    document.addEventListener('DOMContentLoaded', () => {
+        // Edit button listeners
+        document.querySelectorAll('.btn-edit-trigger').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const reviewId = e.target.getAttribute('data-review-id');
+                editReview(reviewId);
+            });
+        });
+
+        // Delete button listeners
+        document.querySelectorAll('.btn-delete-trigger').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const reviewId = e.target.getAttribute('data-review-id');
+                deleteReview(reviewId);
+            });
+        });
+
+        // Cancel button listeners
+        document.querySelectorAll('.btn-cancel-trigger').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const reviewId = e.target.getAttribute('data-review-id');
+                cancelEdit(reviewId);
+            });
+        });
+
+        // Star rating listeners
+        document.querySelectorAll('.star-btn').forEach(star => {
+            star.addEventListener('click', (e) => {
+                const reviewId = e.target.getAttribute('data-review-id');
+                const rating = parseInt(e.target.getAttribute('data-rating'));
+                selectStar(reviewId, rating);
+            });
+        });
+
+        // Initialize star displays on page load
+        document.querySelectorAll('[id^="rating-"]').forEach(input => {
+            const reviewId = input.id.replace('rating-', '');
+            const rating = input.value;
+            updateStarDisplay(reviewId, rating);
+        });
+    });
+
+    function editReview(reviewId) {
+        const viewEl = document.getElementById('view-' + reviewId);
+        const editEl = document.getElementById('edit-' + reviewId);
+        const cardEl = document.getElementById('review-' + reviewId);
+
+        if (viewEl && editEl && cardEl) {
+            viewEl.classList.add('hidden');
+            editEl.classList.add('active');
+            cardEl.classList.add('editing');
+            updateStarDisplay(reviewId, document.getElementById('rating-' + reviewId).value);
+        }
+    }
+
+    function cancelEdit(reviewId) {
+        const editEl = document.getElementById('edit-' + reviewId);
+        const viewEl = document.getElementById('view-' + reviewId);
+        const cardEl = document.getElementById('review-' + reviewId);
+
+        if (editEl && viewEl && cardEl) {
+            editEl.classList.remove('active');
+            viewEl.classList.remove('hidden');
+            cardEl.classList.remove('editing');
+        }
+    }
+
+    function selectStar(reviewId, rating) {
+        document.getElementById('rating-' + reviewId).value = rating;
+        updateStarDisplay(reviewId, rating);
+    }
+
+    function updateStarDisplay(reviewId, rating) {
+        document.querySelectorAll('#stars-' + reviewId + ' .star-btn').forEach((star, index) => {
+            if (index < parseInt(rating)) {
+                star.classList.add('active');
+            } else {
+                star.classList.remove('active');
+            }
+        });
+    }
+
+    function deleteReview(reviewId) {
+        if (confirm('Are you sure you want to delete this review? This action cannot be undone.')) {
+            window.location.href = '/reviews/delete/' + reviewId;
+        }
+    }
+</script>
 </body>
 </html>

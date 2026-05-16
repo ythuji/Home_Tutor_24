@@ -1,10 +1,83 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About TutorSync | Modern Tutor Booking</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
+        * { font-family: 'Inter', sans-serif; }
+
+        body {
+            background:
+                    radial-gradient(circle at 10% 5%, #dbeafe 0, transparent 35%),
+                    radial-gradient(circle at 90% 10%, #bfdbfe 0, transparent 38%),
+                    linear-gradient(180deg, #f8fbff 0%, #eef6ff 55%, #ffffff 100%);
+            color: #0f172a;
+            min-height: 100vh;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            box-shadow: 0 18px 40px rgba(37, 99, 235, 0.12);
+        }
+    </style>
+</head>
+<body class="px-4 md:px-8 py-6 md:py-10">
+<nav class="mx-auto max-w-6xl glass rounded-2xl px-5 py-4 flex flex-wrap justify-between items-center gap-3">
+    <a th:href="@{/}" class="flex items-center gap-3">
+        <span class="h-9 w-9 rounded-xl bg-gradient-to-br from-blue-400 to-indigo-600 grid place-items-center font-black text-white">S</span>
+        <span class="text-xl font-bold text-blue-700">TutorSync</span>
+    </a>
+    <div class="flex items-center gap-3">
+        <a th:href="@{/}" class="text-slate-600 hover:text-blue-700 transition">Home</a>
+        <a th:href="@{/login}" class="rounded-xl bg-blue-600 px-4 py-2 text-white font-semibold hover:bg-blue-700 transition">Login</a>
+    </div>
+</nav>
+
+<main class="mx-auto max-w-6xl mt-8 md:mt-12 space-y-8">
+    <section class="glass rounded-3xl p-8 md:p-12">
+        <p class="inline-block rounded-full bg-indigo-100 border border-indigo-200 px-4 py-2 text-sm text-indigo-700">Our Mission</p>
+        <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mt-5">Learning Should Be Easy to Access and Easy to Trust</h1>
+        <p class="text-slate-600 mt-5 text-lg max-w-3xl">
+            TutorSync was built to remove friction between students and great tutors. We combine transparent profiles,
+            easy session booking, secure transactions, and feedback-driven trust to create a smoother tutoring experience.
+        </p>
+    </section>
+
+    <section class="grid md:grid-cols-3 gap-5">
+        <article class="glass rounded-2xl p-6">
+            <h2 class="text-xl font-semibold text-slate-900">Student First</h2>
+            <p class="text-slate-600 mt-3">Students can discover tutors by subject and confidence signals, then book quickly without complicated workflows.</p>
+        </article>
+        <article class="glass rounded-2xl p-6">
+            <h2 class="text-xl font-semibold text-slate-900">Tutor Empowered</h2>
+            <p class="text-slate-600 mt-3">Tutors get a profile-centric platform to showcase expertise, grow reputation, and connect with suitable learners.</p>
+        </article>
+        <article class="glass rounded-2xl p-6">
+            <h2 class="text-xl font-semibold text-slate-900">Trusted Platform</h2>
+            <p class="text-slate-600 mt-3">From payments to reviews, every layer is designed to keep decisions clear and interactions secure.</p>
+        </article>
+    </section>
+
+    <section class="glass rounded-3xl p-8 md:p-12">
+        <h2 class="text-3xl font-bold text-slate-900">What We Focus On</h2>
+        <ul class="mt-5 grid sm:grid-cols-2 gap-4 text-slate-600">
+            <li class="rounded-xl bg-blue-50 border border-blue-100 p-4">Fast discovery and scheduling</li>
+            <li class="rounded-xl bg-blue-50 border border-blue-100 p-4">Transparent tutor quality signals</li>
+            <li class="rounded-xl bg-blue-50 border border-blue-100 p-4">Reliable records of bookings and sessions</li>
+            <li class="rounded-xl bg-blue-50 border border-blue-100 p-4">A clean UX that feels modern and focused</li>
+        </ul>
+        <div class="mt-8 flex flex-wrap gap-3">
+            <a th:href="@{/users/register}" class="rounded-xl bg-blue-600 px-5 py-3 text-white font-semibold hover:bg-blue-700 transition">Become a Student</a>
+            <a th:href="@{/tutors/register}" class="rounded-xl border border-emerald-300/50 bg-emerald-500/85 px-5 py-3 text-white font-semibold hover:bg-emerald-500 transition">Join as Tutor</a>
+        </div>
+    </section>
+</main>
 </body>
 </html>
