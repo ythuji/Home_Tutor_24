@@ -1,0 +1,3 @@
+T001|Chamara silva|chamara@gmail.com|0771234567|Mathematics|5|Morning|1000.0|fulltime
+T002|Kasun Fernando|kasunf@gmail.com|0781234587|English|4|Weekend|900.0|fulltime
+T003|Ramani Fernando|Ramanifernando@gmail.com|0773456780|Sinhala|6|Evening|1200.0|parttime
