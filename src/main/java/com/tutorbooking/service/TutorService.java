@@ -32,4 +32,24 @@ public class TutorService {
     public boolean deleteTutor(String id) {
         return tutorRepository.deleteById(id);
     }
+
+    public Tutor authenticate(String email, String password) {
+        List<Tutor> tutors = getAllTutors();
+        for (Tutor tutor : tutors) {
+            if (tutor.getEmail().equals(email) && tutor.getPassword().equals(password)) {
+                return tutor;
+            }
+        }
+        return null;
+    }
+
+    public Tutor getTutorByEmail(String email) {
+        List<Tutor> tutors = getAllTutors();
+        for (Tutor tutor : tutors) {
+            if (tutor.getEmail().equalsIgnoreCase(email)) {
+                return tutor;
+            }
+        }
+        return null;
+    }
 }

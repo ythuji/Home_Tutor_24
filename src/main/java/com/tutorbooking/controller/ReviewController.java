@@ -32,7 +32,7 @@ public class ReviewController {
             return "redirect:/login";
 
         model.addAttribute("reviews", reviewService.getReviewsByStudent(user.getId()));
-        return "review/my-reviews";
+        return "review/review-list";
     }
 
     // View reviews for a specific tutor
@@ -86,7 +86,7 @@ public class ReviewController {
 
         // Validate that student is eligible to review
         if (!reviewService.isEligibleToReview(user.getId(), tutorId)) {
-            return "redirect:/reviews/add/" + tutorId + "?error=notEligible";
+            return "redirect:/reviews/add/" + tutorId;
         }
 
         String id = IDGenerator.generate("R");
