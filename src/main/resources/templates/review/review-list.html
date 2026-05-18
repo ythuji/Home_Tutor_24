@@ -29,7 +29,7 @@
     <div class="panel shadow-sm">
         <h2 class="panel-title">Quality Assurance Logs</h2>
 
-        <div th:if="${reviews.empty}" class="py-12 text-center text-gray-400 font-bold uppercase tracking-widest text-[10px]">
+        <div th:if="${#lists.isEmpty(reviews)}" class="py-12 text-center text-gray-400 font-bold uppercase tracking-widest text-[10px]">
             No review records found in registry.
         </div>
 

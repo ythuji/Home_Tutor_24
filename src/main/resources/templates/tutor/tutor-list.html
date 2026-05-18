@@ -80,11 +80,25 @@
             <span th:if="${t.tutorType == 'parttime'}" class="badge-part">Part Time</span>
         </td>
         <td>
-            <a th:href="@{/tutors/edit/{id}(id=${t.tutorId})}"
-               class="btn btn-warning btn-sm">Edit</a>
-            <a th:href="@{/tutors/delete/{id}(id=${t.tutorId})}"
-               class="btn btn-danger btn-sm"
-               onclick="return confirm('Are you sure you want to delete this tutor?')">Delete</a>
+            <div class="d-flex flex-wrap gap-2">
+                <a th:if="${session.loggedUser != null && session.loggedUser.role == 'STUDENT'}"
+                   th:href="@{/bookings/create(tutorId=${t.tutorId})}"
+                   class="btn btn-primary btn-sm">Book</a>
+                <a th:if="${session.loggedUser != null && session.loggedUser.role == 'STUDENT'}"
+                   th:href="@{/reviews/tutor/{tutorId}(tutorId=${t.tutorId})}"
+                   class="btn btn-info btn-sm text-white">View Reviews</a>
+                <a th:if="${session.loggedUser != null && session.loggedUser.role == 'STUDENT'}"
+                   th:href="@{/reviews/add/{tutorId}(tutorId=${t.tutorId})}"
+                   class="btn btn-success btn-sm">Leave Review</a>
+
+                <a th:if="${session.loggedUser != null && session.loggedUser.role != 'STUDENT'}"
+                   th:href="@{/tutors/edit/{id}(id=${t.tutorId})}"
+                   class="btn btn-warning btn-sm">Edit</a>
+                <a th:if="${session.loggedUser != null && session.loggedUser.role != 'STUDENT'}"
+                   th:href="@{/tutors/delete/{id}(id=${t.tutorId})}"
+                   class="btn btn-danger btn-sm"
+                   onclick="return confirm('Are you sure you want to delete this tutor?')">Delete</a>
+            </div>
         </td>
     </tr>
     <tr th:if="${#lists.isEmpty(tutors)}">

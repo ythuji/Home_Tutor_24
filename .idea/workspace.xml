@@ -4,7 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="959a9dc0-330b-4e67-b8a5-3b4e1b5588fd" name="Changes" comment="" />
+    <list default="true" id="959a9dc0-330b-4e67-b8a5-3b4e1b5588fd" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tutorbooking/controller/TutorController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tutorbooking/controller/TutorController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/payments.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/payments.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/tutors.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/tutors.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/review/review-form.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/review/review-form.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/review/review-list.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/review/review-list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/review/tutor-reviews.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/review/tutor-reviews.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/tutor/tutor-list.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/tutor/tutor-list.html" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -83,7 +93,7 @@
       <workItem from="1778913341750" duration="5877000" />
       <workItem from="1778990611940" duration="517000" />
       <workItem from="1779088501694" duration="2823000" />
-      <workItem from="1779095079809" duration="1380000" />
+      <workItem from="1779095079809" duration="3939000" />
     </task>
     <servers />
   </component>

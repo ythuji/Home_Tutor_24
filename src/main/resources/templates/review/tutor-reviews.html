@@ -34,7 +34,7 @@
     <div class="tutor-header">
         <div class="flex items-start justify-between mb-4">
             <div class="flex gap-4">
-                <div class="tutor-avatar" th:text="${tutor.name[0]}"></div>
+                <div class="tutor-avatar" th:text="${tutor.name.substring(0,1)}"></div>
                 <div>
                     <h1 class="text-2xl font-bold mb-1" th:text="${tutor.name}">Name</h1>
                     <p class="text-sm opacity-90" th:text="${tutor.specialization}">Specialization</p>
@@ -60,7 +60,7 @@
     <div class="panel shadow-sm">
         <h2 class="panel-title">Student Reviews (<span th:text="${reviews.size()}">0</span>)</h2>
 
-        <div th:if="${reviews.empty}" class="py-20 text-center border-2 border-dashed border-gray-100 rounded-xl">
+        <div th:if="${#lists.isEmpty(reviews)}" class="py-20 text-center border-2 border-dashed border-gray-100 rounded-xl">
             <p class="text-gray-400 font-bold uppercase tracking-widest text-[11px] mb-4">No reviews yet. Be the first!</p>
             <a th:href="@{'/reviews/add/' + ${tutor.id}}" class="text-[11px] text-blue-600 font-bold uppercase tracking-widest hover:underline">Leave Your Review</a>
         </div>
