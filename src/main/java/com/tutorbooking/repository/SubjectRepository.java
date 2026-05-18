@@ -12,7 +12,7 @@ public class SubjectRepository {
         List<String> lines = FileHelper.readAllLines(FILE_NAME);
         List<Subject> subjects = new ArrayList<>();
         for (String line : lines) {
-            String[] parts = line.split("\\|");
+            String[] parts = line.split("\\|", -1);
             if (parts.length >= 4) {
                 subjects.add(new Subject(parts[0], parts[1], parts[2], parts[3]));
             }

@@ -43,11 +43,19 @@ public class PaymentController {
         if (user == null)
             return "redirect:/login";
 
-        if (bookingId != null) {
+        if (bookingId != null && !bookingId.isEmpty()) {
             Booking booking = bookingService.getBookingById(bookingId);
-            model.addAttribute("booking", booking);
-            model.addAttribute("bookingId", bookingId);
-            model.addAttribute("studentId", user.getId());
+            if (booking != null) {
+                model.addAttribute("booking", booking);
+                model.addAttribute("bookingId", bookingId);
+                model.addAttribute("studentId", user.getId());
+            } else {
+                model.addAttribute("error", "Booking not found. Please select a valid booking.");
+                return "redirect:/bookings/list";
+            }
+        } else {
+            model.addAttribute("error", "Please select a booking to make payment.");
+            return "redirect:/bookings/list";
         }
 
         model.addAttribute("userCards", cardService.getCardsByUserId(user.getId()));
@@ -63,10 +71,40 @@ public class PaymentController {
             return "redirect:/login";
         }
 
-        if ("CARD".equals(paymentMethod) && cardId != null) {
+        // Validate booking exists
+        Booking booking = bookingService.getBookingById(bookingId);
+        if (booking == null) {
+            model.addAttribute("error", "Booking not found");
+            return "redirect:/bookings/list";
+        }
+
+        // Validate payment method
+        if (paymentMethod == null || paymentMethod.isEmpty()) {
+            model.addAttribute("error", "Please select a payment method");
+            model.addAttribute("booking", booking);
+            model.addAttribute("bookingId", bookingId);
+            model.addAttribute("studentId", studentId);
+            model.addAttribute("userCards", cardService.getCardsByUserId(studentId));
+            return "payment/make-payment";
+        }
+
+        // Validate amount
+        if (amount == null || amount <= 0) {
+            model.addAttribute("error", "Please enter a valid amount");
+            model.addAttribute("booking", booking);
+            model.addAttribute("bookingId", bookingId);
+            model.addAttribute("studentId", studentId);
+            model.addAttribute("userCards", cardService.getCardsByUserId(studentId));
+            return "payment/make-payment";
+        }
+
+        if ("CARD".equals(paymentMethod) && cardId != null && !cardId.isEmpty()) {
             if (!cardService.cardBelongsToUser(cardId, studentId)) {
-                model.addAttribute("error", "Invalid card");
+                model.addAttribute("error", "Invalid card selected");
+                model.addAttribute("booking", booking);
                 model.addAttribute("bookingId", bookingId);
+                model.addAttribute("studentId", studentId);
+                model.addAttribute("userCards", cardService.getCardsByUserId(studentId));
                 return "payment/make-payment";
             }
         }

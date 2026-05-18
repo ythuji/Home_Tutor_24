@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 import java.util.stream.Collectors;
 
 @Service
@@ -80,6 +82,20 @@ public class BookingService {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    /**
+     * Return a set of booking IDs from a tutor's bookings that have a PAID payment.
+     */
+    public Set<String> getPaidBookingIdsForTutor(String tutorId) {
+        Set<String> paid = new HashSet<>();
+        List<Booking> tutorBookings = getBookingsByTutor(tutorId);
+        for (Booking b : tutorBookings) {
+            if (hasPayment(b.getId())) {
+                paid.add(b.getId());
+            }
+        }
+        return paid;
     }
 
     public void deleteBooking(String id) {

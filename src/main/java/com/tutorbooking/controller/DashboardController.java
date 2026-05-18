@@ -24,6 +24,8 @@ public class DashboardController {
             model.addAttribute("bookings", bookingService.getBookingsByStudent(user.getId()));
         } else {
             model.addAttribute("bookings", bookingService.getBookingsByTutor(user.getId()));
+            // Add paid booking ids so the template can display payment status badges
+            model.addAttribute("paidBookings", bookingService.getPaidBookingIdsForTutor(user.getId()));
         }
 
         model.addAttribute("tutorCount", tutorService.getAllTutors().size());

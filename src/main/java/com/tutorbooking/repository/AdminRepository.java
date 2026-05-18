@@ -12,7 +12,7 @@ public class AdminRepository {
         List<String> lines = FileHelper.readAllLines(FILE_NAME);
         List<Admin> admins = new ArrayList<>();
         for (String line : lines) {
-            String[] parts = line.split("\\|");
+            String[] parts = line.split("\\|", -1);
             if (parts.length >= 5) {
                 admins.add(new Admin(parts[0], parts[1], parts[2], parts[3], parts[4],
                         parts.length > 5 ? parts[5] : ""));

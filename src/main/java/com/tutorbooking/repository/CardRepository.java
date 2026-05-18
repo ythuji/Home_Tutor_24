@@ -67,7 +67,7 @@ public class CardRepository {
     }
 
     private Card parseCard(String line) {
-        String[] parts = line.split("\\|");
+        String[] parts = line.split("\\|", -1);
         if (parts.length >= 6) {
             return new Card(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5]);
         }

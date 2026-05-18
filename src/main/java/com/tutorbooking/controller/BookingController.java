@@ -70,7 +70,7 @@ public class BookingController {
             return "redirect:/login";
 
         Booking booking = bookingService.getBookingById(id);
-        if (booking != null && booking.getStudentId().equals(user.getId())) {
+        if (booking != null && (booking.getStudentId().equals(user.getId()) || booking.getTutorId().equals(user.getId()))) {
             bookingService.deleteBooking(id);
         }
         return "redirect:/bookings/list";
