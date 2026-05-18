@@ -9,8 +9,6 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Controller
 @RequestMapping("/bookings")
@@ -72,7 +70,7 @@ public class BookingController {
             return "redirect:/login";
 
         Booking booking = bookingService.getBookingById(id);
-        if (booking != null && booking.getStudentId().equals(user.getId())) {
+        if (booking != null && (booking.getStudentId().equals(user.getId()) || booking.getTutorId().equals(user.getId()))) {
             bookingService.deleteBooking(id);
         }
         return "redirect:/bookings/list";

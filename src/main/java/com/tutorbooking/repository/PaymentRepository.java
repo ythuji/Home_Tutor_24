@@ -12,7 +12,7 @@ public class PaymentRepository {
         List<String> lines = FileHelper.readAllLines(FILE_NAME);
         List<Payment> payments = new ArrayList<>();
         for (String line : lines) {
-            String[] parts = line.split("\\|");
+            String[] parts = line.split("\\|", -1);
             if (parts.length >= 7) {
                 payments.add(new Payment(parts[0], parts[1], parts[2], Double.parseDouble(parts[3]),
                         parts[4], parts[5], parts[6]));

@@ -1,4 +1,3 @@
-package com.tutorbooking.repository;
 
 package com.tutorbooking.repository;
 
@@ -14,7 +13,7 @@ public class ReviewRepository {
         List<String> lines = FileHelper.readAllLines(FILE_NAME);
         List<Review> reviews = new ArrayList<>();
         for (String line : lines) {
-            String[] parts = line.split("\\|");
+            String[] parts = line.split("\\|", -1);
             if (parts.length >= 5) {
                 reviews.add(new Review(parts[0], parts[1], parts[2], Integer.parseInt(parts[3]), parts[4]));
             }

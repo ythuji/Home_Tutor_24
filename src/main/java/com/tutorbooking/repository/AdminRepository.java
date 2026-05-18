@@ -6,13 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AdminRepository {
-    private static final String FILE_NAME = "admins.txt";
+    private static final String FILE_NAME = "admin.txt";
 
     public List<Admin> findAll() {
         List<String> lines = FileHelper.readAllLines(FILE_NAME);
         List<Admin> admins = new ArrayList<>();
         for (String line : lines) {
-            String[] parts = line.split("\\|");
+            String[] parts = line.split("\\|", -1);
             if (parts.length >= 5) {
                 admins.add(new Admin(parts[0], parts[1], parts[2], parts[3], parts[4],
                         parts.length > 5 ? parts[5] : ""));
@@ -30,7 +30,7 @@ public class AdminRepository {
 
     public Admin findById(String id) {
         return findAll().stream()
-                .filter(a -> a.getId().equals(id))
+                .filter(a -> a.toString().split("\\|")[0].equals(id))
                 .findFirst()
                 .orElse(null);
     }

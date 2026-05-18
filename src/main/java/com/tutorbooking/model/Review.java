@@ -1,4 +1,3 @@
-package com.tutorbooking.model;
 
 package com.tutorbooking.model;
 

@@ -56,17 +56,30 @@ public class AuthController {
 
     @PostMapping("/users/register")
     public String registerUser(@RequestParam String name, @RequestParam String email,
-                               @RequestParam String password, @RequestParam(required = false) String phone,
-                               @RequestParam(required = false) String address, Model model) {
+                               @RequestParam String password,
+                               @RequestParam(defaultValue = "STUDENT") String role,
+                               @RequestParam(required = false) String grade,
+                               @RequestParam(required = false) String subject,
+                               @RequestParam(required = false) Double rate,
+                               Model model) {
         User existingUser = userService.getUserByEmail(email);
-        if (existingUser != null) {
+        Tutor existingTutor = tutorService.getTutorByEmail(email);
+        if (existingUser != null || existingTutor != null) {
             model.addAttribute("error", "Email already exists");
-            return "auth/register";
+            return "user/register";
         }
 
-        String userId = IDGenerator.generate("U");
-        Student newStudent = new Student(userId, name, email, password, "");
-        userService.registerUser(newStudent);
+        if ("TUTOR".equalsIgnoreCase(role)) {
+            String tutorId = IDGenerator.generate("T");
+            Tutor newTutor = new Tutor(tutorId, name, email, password, "",
+                    subject != null ? subject : "", 0, rate != null ? rate : 0.0, 0.0);
+            tutorService.addTutor(newTutor);
+        } else {
+            String userId = IDGenerator.generate("U");
+            Student newStudent = new Student(userId, name, email, password,
+                    grade != null ? grade : "");
+            userService.registerUser(newStudent);
+        }
         model.addAttribute("success", "Registration successful! Please login.");
         return "auth/login";
     }

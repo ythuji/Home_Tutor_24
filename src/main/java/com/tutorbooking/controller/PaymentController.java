@@ -7,6 +7,7 @@ import com.tutorbooking.model.Booking;
 import com.tutorbooking.service.PaymentService;
 import com.tutorbooking.service.CardService;
 import com.tutorbooking.service.BookingService;
+import com.tutorbooking.service.UserService;
 import com.tutorbooking.util.IDGenerator;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,11 @@ public class PaymentController {
     private final PaymentService paymentService = new PaymentService();
     private final CardService cardService = new CardService();
     private final BookingService bookingService = new BookingService();
+    private final UserService userService;
+
+    public PaymentController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/history")
     public String viewHistory(HttpSession session, Model model) {
@@ -37,11 +43,19 @@ public class PaymentController {
         if (user == null)
             return "redirect:/login";
 
-        if (bookingId != null) {
+        if (bookingId != null && !bookingId.isEmpty()) {
             Booking booking = bookingService.getBookingById(bookingId);
-            model.addAttribute("booking", booking);
-            model.addAttribute("bookingId", bookingId);
-            model.addAttribute("studentId", user.getId());
+            if (booking != null) {
+                model.addAttribute("booking", booking);
+                model.addAttribute("bookingId", bookingId);
+                model.addAttribute("studentId", user.getId());
+            } else {
+                model.addAttribute("error", "Booking not found. Please select a valid booking.");
+                return "redirect:/bookings/list";
+            }
+        } else {
+            model.addAttribute("error", "Please select a booking to make payment.");
+            return "redirect:/bookings/list";
         }
 
         model.addAttribute("userCards", cardService.getCardsByUserId(user.getId()));
@@ -51,15 +65,47 @@ public class PaymentController {
     @PostMapping("/process")
     public String makePayment(@RequestParam String bookingId, @RequestParam String studentId,
                               @RequestParam Double amount, @RequestParam String paymentMethod,
-                              @RequestParam(required = false) String cardId, HttpSession session) {
+                              @RequestParam(required = false) String cardId, HttpSession session, Model model) {
         User user = (User) session.getAttribute("loggedUser");
         if (user == null || !user.getId().equals(studentId)) {
             return "redirect:/login";
         }
 
-        if ("CARD".equals(paymentMethod) && cardId != null) {
+        // Validate booking exists
+        Booking booking = bookingService.getBookingById(bookingId);
+        if (booking == null) {
+            model.addAttribute("error", "Booking not found");
+            return "redirect:/bookings/list";
+        }
+
+        // Validate payment method
+        if (paymentMethod == null || paymentMethod.isEmpty()) {
+            model.addAttribute("error", "Please select a payment method");
+            model.addAttribute("booking", booking);
+            model.addAttribute("bookingId", bookingId);
+            model.addAttribute("studentId", studentId);
+            model.addAttribute("userCards", cardService.getCardsByUserId(studentId));
+            return "payment/make-payment";
+        }
+
+        // Validate amount
+        if (amount == null || amount <= 0) {
+            model.addAttribute("error", "Please enter a valid amount");
+            model.addAttribute("booking", booking);
+            model.addAttribute("bookingId", bookingId);
+            model.addAttribute("studentId", studentId);
+            model.addAttribute("userCards", cardService.getCardsByUserId(studentId));
+            return "payment/make-payment";
+        }
+
+        if ("CARD".equals(paymentMethod) && cardId != null && !cardId.isEmpty()) {
             if (!cardService.cardBelongsToUser(cardId, studentId)) {
-                return "redirect:/payments/create?bookingId=" + bookingId + "&error=Invalid card";
+                model.addAttribute("error", "Invalid card selected");
+                model.addAttribute("booking", booking);
+                model.addAttribute("bookingId", bookingId);
+                model.addAttribute("studentId", studentId);
+                model.addAttribute("userCards", cardService.getCardsByUserId(studentId));
+                return "payment/make-payment";
             }
         }
 
@@ -82,7 +128,7 @@ public class PaymentController {
     }
 
     @GetMapping("/cards/add")
-    public String showAddCardForm(HttpSession session, Model model) {
+    public String showAddCardForm(HttpSession session) {
         User user = (User) session.getAttribute("loggedUser");
         if (user == null)
             return "redirect:/login";

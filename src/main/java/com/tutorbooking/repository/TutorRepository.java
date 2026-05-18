@@ -7,22 +7,28 @@ import java.util.List;
 
 public class TutorRepository {
 
-    private static final String FILE_NAME = "data/tutors.txt";
+    private static final String FILE_NAME = "tutors.txt";
 
     public List<Tutor> findAll() {
         List<String> lines = FileHelper.readAllLines(FILE_NAME);
         List<Tutor> tutors = new ArrayList<>();
         for (String line : lines) {
-            String[] parts = line.split("\\|");
-            if (parts.length >= 9) {
+            // Keep trailing empty values so rows like "...|3.0|" still load correctly.
+            String[] parts = line.split("\\|", -1);
+            if (parts.length >= 11) {
                 tutors.add(new Tutor(
-                        parts[1], parts[2], parts[3],
-                        parts[0], parts[4],
-                        Integer.parseInt(parts[5]),
+                        parts[0],
+                        parts[1],
+                        parts[2],
+                        parts[3],
+                        parts[4],
                         parts[6],
-                        Double.parseDouble(parts[7]),
-                        parts[8]
+                        Integer.parseInt(parts[7]),
+                        Double.parseDouble(parts[9]),
+                        0.0
                 ));
+                tutors.get(tutors.size() - 1).setAvailability(parts[8]);
+                tutors.get(tutors.size() - 1).setTutorType(parts[10]);
             }
         }
         return tutors;

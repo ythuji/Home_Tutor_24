@@ -6,7 +6,7 @@ public class Admin extends User {
     private boolean active;
 
     public Admin() {
-        super();
+        super("", "", "");
         this.setRole("ADMIN");
         this.active = true;
     }
@@ -25,8 +25,18 @@ public class Admin extends User {
     public boolean isActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
 
+    public String getId() { return super.getId(); }
+    public void setId(String id) { super.setId(id); }
+    public String getPassword() { return super.getPassword(); }
+    public void setPassword(String password) { super.setPassword(password); }
+
     @Override
     public String toString() {
         return getId() + "|" + getName() + "|" + getEmail() + "|" + getPassword() + "|" + adminLevel + "|" + createdDate;
+    }
+
+    @Override
+    public String getDetails() {
+        return "ID: " + getId() + " | Name: " + getName() + " | Email: " + getEmail() + " | Level: " + adminLevel;
     }
 }

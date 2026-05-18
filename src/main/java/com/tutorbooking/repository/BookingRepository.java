@@ -12,7 +12,7 @@ public class BookingRepository {
         List<String> lines = FileHelper.readAllLines(FILE_NAME);
         List<Booking> bookings = new ArrayList<>();
         for (String line : lines) {
-            String[] parts = line.split("\\|");
+            String[] parts = line.split("\\|", -1);
             if (parts.length >= 6) {
                 bookings.add(new Booking(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5]));
             }

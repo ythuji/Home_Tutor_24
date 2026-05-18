@@ -103,16 +103,16 @@
                 <h3 class="text-sm font-bold text-gray-900 uppercase">My Bookings</h3>
                 <p class="text-[10px] text-gray-400 mt-1">Assigned bookings</p>
             </a>
-            <div class="panel shadow-sm p-6 text-center">
+            <a th:href="@{/bookings/list}" class="panel shadow-sm hover:shadow-md transition-shadow p-6 text-center">
                 <div class="text-3xl mb-3">✅</div>
                 <h3 class="text-sm font-bold text-gray-900 uppercase">Confirm Booking</h3>
                 <p class="text-[10px] text-gray-400 mt-1">Accept pending</p>
-            </div>
-            <div class="panel shadow-sm p-6 text-center">
+            </a>
+            <a th:href="@{/bookings/list}" class="panel shadow-sm hover:shadow-md transition-shadow p-6 text-center">
                 <div class="text-3xl mb-3">🏁</div>
                 <h3 class="text-sm font-bold text-gray-900 uppercase">Mark Completed</h3>
                 <p class="text-[10px] text-gray-400 mt-1">Finish sessions</p>
-            </div>
+            </a>
             <a th:href="@{/reviews/list}" class="panel shadow-sm hover:shadow-md transition-shadow p-6 text-center">
                 <div class="text-3xl mb-3">⭐</div>
                 <h3 class="text-sm font-bold text-gray-900 uppercase">View Reviews</h3>
@@ -165,7 +165,7 @@
                 <span th:unless="${user.role == 'STUDENT'}">My Assigned Sessions</span>
             </h2>
 
-            <div th:if="${bookings.empty}" class="py-12 text-center text-gray-400 font-bold uppercase tracking-widest text-[10px]">
+            <div th:if="${#lists.isEmpty(bookings)}" class="py-12 text-center text-gray-400 font-bold uppercase tracking-widest text-[10px]">
                 <span th:if="${user.role == 'STUDENT'}">No bookings yet. Start by browsing tutors!</span>
                 <span th:unless="${user.role == 'STUDENT'}">No bookings assigned. Check back soon!</span>
             </div>
@@ -179,16 +179,27 @@
                             <p class="text-[11px] text-gray-400" th:text="${booking.dateTime}">TIME</p>
                         </div>
                     </div>
-                    <div class="flex items-center gap-4">
-                        <span class="text-[10px] font-bold uppercase tracking-widest text-blue-600" th:text="${booking.status}">STATUS</span>
+                        <div class="flex items-center gap-4">
+                        <div class="flex items-center gap-3">
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-blue-600" th:text="${booking.status}">STATUS</span>
+                            <!-- Payment status badge: uses BookingService bean to check for PAID payments -->
+                            <span th:if="${paidBookings != null and paidBookings.contains(booking.id)}"
+                                  class="ml-2 text-[10px] font-bold uppercase tracking-widest text-green-600">PAID</span>
+                            <span th:unless="${paidBookings != null and paidBookings.contains(booking.id)}"
+                                  class="ml-2 text-[10px] font-bold uppercase tracking-widest text-yellow-600">UNPAID</span>
+                        </div>
                         <!-- STUDENT: Show delete/view actions -->
                         <div th:if="${user.role == 'STUDENT'}" class="flex gap-2">
                             <a th:href="@{'#'}" class="text-[10px] font-bold text-gray-400 hover:text-gray-600">EDIT</a>
                         </div>
                         <!-- TUTOR: Show approve/complete actions -->
                         <div th:unless="${user.role == 'STUDENT'}" class="flex gap-2">
-                            <a th:href="@{'#'}" class="text-[10px] font-bold text-green-600 hover:text-green-800" th:if="${booking.status == 'PENDING'}">APPROVE</a>
-                            <a th:href="@{'#'}" class="text-[10px] font-bold text-purple-600 hover:text-purple-800" th:if="${booking.status == 'CONFIRMED'}">COMPLETE</a>
+                            <a th:href="@{'/bookings/status/' + ${booking.id} + '/ACCEPTED'}"
+                               class="text-[10px] font-bold text-green-600 hover:text-green-800"
+                               th:if="${booking.status == 'PENDING'}">APPROVE</a>
+                            <a th:href="@{'/bookings/status/' + ${booking.id} + '/COMPLETED'}"
+                               class="text-[10px] font-bold text-purple-600 hover:text-purple-800"
+                               th:if="${booking.status == 'ACCEPTED'}">COMPLETE</a>
                         </div>
                     </div>
                 </div>
