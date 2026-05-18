@@ -38,7 +38,7 @@
                class="px-5 py-2.5 bg-blue-600 text-white text-[11px] font-bold rounded-md uppercase tracking-widest hover:opacity-90">Schedule Logic Unit</a>
         </div>
 
-        <div th:if="${bookings.empty}" class="py-20 text-center border-2 border-dashed border-gray-100 rounded-xl">
+        <div th:if="${#lists.isEmpty(bookings)}" class="py-20 text-center border-2 border-dashed border-gray-100 rounded-xl">
             <p class="text-gray-400 font-bold uppercase tracking-widest text-[11px]">Buffer Empty. No scheduled transactions.</p>
         </div>
 
@@ -58,9 +58,14 @@
 
                 <div class="flex items-center gap-4">
                     <!-- Tutor Controls -->
-                    <div th:if="${session.loggedUser.role == 'TUTOR' && booking.status == 'PENDING'}" class="flex gap-2">
-                        <a th:href="@{'/bookings/status/' + ${booking.id} + '/ACCEPTED'}" class="btn-action bg-green-600 text-white">Accept</a>
-                        <a th:href="@{'/bookings/status/' + ${booking.id} + '/REJECTED'}" class="btn-action bg-gray-100 text-gray-400">Suspend</a>
+                    <div th:if="${session.loggedUser.role == 'TUTOR'}" class="flex gap-2">
+                        <th:block th:if="${booking.status == 'PENDING'}">
+                            <a th:href="@{'/bookings/status/' + ${booking.id} + '/ACCEPTED'}" class="btn-action bg-green-600 text-white">Accept</a>
+                            <a th:href="@{'/bookings/status/' + ${booking.id} + '/CANCELLED'}" class="btn-action bg-gray-100 text-gray-500">Cancel</a>
+                        </th:block>
+                        <th:block th:if="${booking.status == 'ACCEPTED'}">
+                            <a th:href="@{'/bookings/status/' + ${booking.id} + '/COMPLETED'}" class="btn-action bg-purple-600 text-white">Mark Complete</a>
+                        </th:block>
                     </div>
 
                     <!-- Student Controls -->

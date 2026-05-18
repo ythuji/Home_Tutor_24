@@ -6,28 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="959a9dc0-330b-4e67-b8a5-3b4e1b5588fd" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tutorbooking/HomeTutorApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tutorbooking/HomeTutorApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tutorbooking/controller/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tutorbooking/controller/AdminController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/tutorbooking/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tutorbooking/controller/AuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tutorbooking/controller/BookingController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tutorbooking/controller/BookingController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/tutorbooking/controller/PaymentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tutorbooking/controller/PaymentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tutorbooking/controller/ReviewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tutorbooking/controller/ReviewController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tutorbooking/controller/TutorController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tutorbooking/controller/TutorController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tutorbooking/model/Admin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tutorbooking/model/Admin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tutorbooking/model/Review.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tutorbooking/model/Review.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tutorbooking/model/Student.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tutorbooking/model/Student.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tutorbooking/model/Tutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tutorbooking/model/Tutor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tutorbooking/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tutorbooking/model/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tutorbooking/repository/AdminRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tutorbooking/repository/AdminRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tutorbooking/repository/FileHnadler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tutorbooking/repository/ReviewRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tutorbooking/repository/ReviewRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/tutorbooking/repository/TutorRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tutorbooking/repository/TutorRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tutorbooking/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tutorbooking/repository/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tutorbooking/service/AdminService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tutorbooking/service/AdminService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tutorbooking/service/ReviewService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tutorbooking/service/ReviewService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tutorbooking/service/TutorService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tutorbooking/service/TutorService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tutorbooking/util/FileHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tutorbooking/util/FileHelper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tutorbooking/util/IDGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tutorbooking/util/IDGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/bookings.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/bookings.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/cards.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/cards.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/tutors.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/tutors.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,7 +24,7 @@
     </persistenceIdMap>
   </component>
   <component name="CopilotUserSelectedChatMode">
-    <option name="chatModeId" value="Agent" />
+    <option name="chatModeId" value="Ask" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -64,30 +48,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "Spring Boot.HomeTutorApplication.executor": "Run",
-    "git-widget-placeholder": "thuji",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/sanda/OneDrive/Desktop/New folder (3)/Home_Tutor_24",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;Spring Boot.HomeTutorApplication.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;thuji&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/sanda/OneDrive/Desktop/New folder (3)/Home_Tutor_24&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.23892.409" />
-        <option value="bundled-js-predefined-d6986cc7102b-e03c56caf84a-JavaScript-IU-252.23892.409" />
+        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.31033.145" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.31033.145" />
       </set>
     </attachedChunks>
   </component>
@@ -99,11 +88,53 @@
       <option name="presentableId" value="Default" />
       <updated>1777901858882</updated>
       <workItem from="1777901859986" duration="1515000" />
+      <workItem from="1778913341750" duration="5877000" />
+      <workItem from="1778990611940" duration="517000" />
+      <workItem from="1779088501694" duration="2823000" />
+      <workItem from="1779095079809" duration="1072000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="CUSTOM_BOOLEAN_PROPERTIES">
+                <map>
+                  <entry key="Show.Git.Branches" value="false" />
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/tutorbooking/service/PaymentService.java</url>
+          <line>23</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/tutorbooking/service/PaymentService.java</url>
+          <line>27</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/tutorbooking/repository/PaymentRepository.java</url>
+          <line>32</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

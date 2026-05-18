@@ -7,6 +7,7 @@ import com.tutorbooking.model.Booking;
 import com.tutorbooking.service.PaymentService;
 import com.tutorbooking.service.CardService;
 import com.tutorbooking.service.BookingService;
+import com.tutorbooking.service.UserService;
 import com.tutorbooking.util.IDGenerator;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,11 @@ public class PaymentController {
     private final PaymentService paymentService = new PaymentService();
     private final CardService cardService = new CardService();
     private final BookingService bookingService = new BookingService();
+    private final UserService userService;
+
+    public PaymentController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/history")
     public String viewHistory(HttpSession session, Model model) {

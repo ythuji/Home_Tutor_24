@@ -13,7 +13,8 @@ public class TutorRepository {
         List<String> lines = FileHelper.readAllLines(FILE_NAME);
         List<Tutor> tutors = new ArrayList<>();
         for (String line : lines) {
-            String[] parts = line.split("\\|");
+            // Keep trailing empty values so rows like "...|3.0|" still load correctly.
+            String[] parts = line.split("\\|", -1);
             if (parts.length >= 11) {
                 tutors.add(new Tutor(
                         parts[0],

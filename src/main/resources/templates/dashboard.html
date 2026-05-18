@@ -165,7 +165,7 @@
                 <span th:unless="${user.role == 'STUDENT'}">My Assigned Sessions</span>
             </h2>
 
-            <div th:if="${bookings.empty}" class="py-12 text-center text-gray-400 font-bold uppercase tracking-widest text-[10px]">
+            <div th:if="${#lists.isEmpty(bookings)}" class="py-12 text-center text-gray-400 font-bold uppercase tracking-widest text-[10px]">
                 <span th:if="${user.role == 'STUDENT'}">No bookings yet. Start by browsing tutors!</span>
                 <span th:unless="${user.role == 'STUDENT'}">No bookings assigned. Check back soon!</span>
             </div>
@@ -187,8 +187,12 @@
                         </div>
                         <!-- TUTOR: Show approve/complete actions -->
                         <div th:unless="${user.role == 'STUDENT'}" class="flex gap-2">
-                            <a th:href="@{'#'}" class="text-[10px] font-bold text-green-600 hover:text-green-800" th:if="${booking.status == 'PENDING'}">APPROVE</a>
-                            <a th:href="@{'#'}" class="text-[10px] font-bold text-purple-600 hover:text-purple-800" th:if="${booking.status == 'CONFIRMED'}">COMPLETE</a>
+                            <a th:href="@{'/bookings/status/' + ${booking.id} + '/ACCEPTED'}"
+                               class="text-[10px] font-bold text-green-600 hover:text-green-800"
+                               th:if="${booking.status == 'PENDING'}">APPROVE</a>
+                            <a th:href="@{'/bookings/status/' + ${booking.id} + '/COMPLETED'}"
+                               class="text-[10px] font-bold text-purple-600 hover:text-purple-800"
+                               th:if="${booking.status == 'ACCEPTED'}">COMPLETE</a>
                         </div>
                     </div>
                 </div>
